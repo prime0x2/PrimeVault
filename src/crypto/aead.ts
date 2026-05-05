@@ -22,6 +22,10 @@ export function generateIv(): Uint8Array {
 }
 
 function gcmAlgorithm(iv: Uint8Array, aad?: Uint8Array): AesGcmParams {
+  // The `BufferSource` casts here and below work around a TS lib.dom
+  // quirk where `Uint8Array` is not always considered assignable to
+  // `BufferSource` despite being a valid runtime value. WebCrypto accepts
+  // it directly per spec; the cast is purely a type-system bridge.
   const params: AesGcmParams = { name: AEAD_ALGO, iv: iv as BufferSource };
   if (aad !== undefined) {
     params.additionalData = aad as BufferSource;

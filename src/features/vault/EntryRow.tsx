@@ -135,7 +135,7 @@ export function EntryRow(props: EntryRowProps): React.ReactElement {
       popupClient
         .send({ kind: 'markUsed', id: entry.id })
         .then(() => onCopied())
-        .catch(() => {});
+        .catch(() => undefined);
     } finally {
       setBusy(false);
     }

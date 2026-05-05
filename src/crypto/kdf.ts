@@ -46,6 +46,13 @@ export function newKdfParams(): KdfParams {
 
 async function importPasswordKey(password: string): Promise<CryptoKey> {
   const passwordBytes = new TextEncoder().encode(password);
+  // The `BufferSource` cast works around a TS lib.dom quirk: TypeScript's
+  // built-in DOM types declare `importKey`'s second arg as `BufferSource`
+  // (alias for `ArrayBufferView | ArrayBuffer`), but a generic `Uint8Array`
+  // does not currently satisfy `ArrayBufferView` *narrowly* in some
+  // TS+lib.dom permutations once `ArrayBuffer.isView<T>` enters the picture.
+  // The runtime accepts `Uint8Array` directly per spec; the cast is purely
+  // a type-system bridge.
   return crypto.subtle.importKey(
     'raw',
     passwordBytes as BufferSource,
@@ -59,6 +66,7 @@ function pbkdf2Algorithm(params: KdfParams): Pbkdf2Params {
   return {
     name: 'PBKDF2',
     hash: 'SHA-256',
+    // Same DOM-typing workaround as in importPasswordKey above.
     salt: params.salt as BufferSource,
     iterations: params.iterations,
   };
@@ -87,8 +95,13 @@ export async function deriveAesKey(
 }
 
 /**
- * Derive raw bytes from a password. Used by tests for known-answer vectors,
- * and by callers that need a non-AES output (none in v1).
+ * Derive raw bytes from a password.
+ *
+ * **Test-only.** Production code must go through {@link deriveAesKey},
+ * which returns a non-extractable `CryptoKey` so the bytes can't be read
+ * back out of memory. This helper exists so the test suite can assert
+ * known-answer vectors against the PBKDF2 output. If you find yourself
+ * reaching for it from `src/`, stop and use `deriveAesKey` instead.
  */
 export async function deriveBytes(
   password: string,

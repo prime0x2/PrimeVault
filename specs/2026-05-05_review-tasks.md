@@ -28,16 +28,16 @@ These are the items the reviewer flagged as "fix before clicking submit." Plus t
 
 Small, isolated changes. Bundling them into one or two commits is fine.
 
-- [ ] **P1.1** Add `SECURITY.md` with the disclosure policy. GitHub surfaces this in the Security tab. (Review §7, also nice-to-have #7.)
-- [ ] **P1.2** Add `CONTRIBUTING.md` with PR conventions, test gate, and "open issue first for design changes." (Review §7.)
-- [ ] **P1.3** Add `.github/ISSUE_TEMPLATE/bug.md` (and feature-request template) plus `.github/PULL_REQUEST_TEMPLATE.md`. (Review §11.)
-- [ ] **P1.4** Add a one-line *why* comment on `Vault.tsx:65`'s `lock()` finally-block: "fail-safe to lock — if the SW lock message itself errors, we still want the popup to show locked state."
-- [ ] **P1.5** Add a one-line *why* comment on `clearVault` (storage/vault.ts) explaining why `pv:meta` is intentionally preserved. (Review §2.)
-- [ ] **P1.6** Pick a single style for empty catch blocks (`.catch(() => undefined)` vs `.catch(() => {})`) and apply consistently. (Review §10.)
-- [ ] **P1.7** Strengthen the warning on `deriveBytes` in `kdf.ts` (or rename to `__deriveBytesForTesting`) so production code can't reach for it. (Review §1.)
-- [ ] **P1.8** Add comments explaining the `as BufferSource` casts in `kdf.ts` and `aead.ts` (TS+lib.dom DOM-vs-Worker mismatch). (Review §1.)
-- [ ] **P1.9** Wrap `backend.set` in `storage/vault.ts` with a try/catch that surfaces `QUOTA_BYTES_PER_ITEM` cleanly so a 50MB cert paste fails loudly instead of silently. (Review §2.)
-- [ ] **P1.10** Extract duplicated OKLCH theme tokens into `src/styles/theme.css` shared by `popup/style.css` and `options/style.css`. (Review §10, also nice-to-have #4.)
+- [x] **P1.1** Add `SECURITY.md` with the disclosure policy. GitHub surfaces this in the Security tab. (Review §7, also nice-to-have #7.)
+- [x] **P1.2** Add `CONTRIBUTING.md` with PR conventions, test gate, and "open issue first for design changes." (Review §7.)
+- [x] **P1.3** Add `.github/ISSUE_TEMPLATE/bug.md` (and feature-request template) plus `.github/PULL_REQUEST_TEMPLATE.md`. (Review §11.)
+- [x] **P1.4** Add a one-line *why* comment on `Vault.tsx:65`'s `lock()` finally-block: "fail-safe to lock — if the SW lock message itself errors, we still want the popup to show locked state."
+- [x] **P1.5** Add a one-line *why* comment on `clearVault` (storage/vault.ts) explaining why `pv:meta` is intentionally preserved. (Review §2.)
+- [x] **P1.6** Pick a single style for empty catch blocks (`.catch(() => undefined)` vs `.catch(() => {})`) and apply consistently. (Review §10.)
+- [x] **P1.7** Strengthen the warning on `deriveBytes` in `kdf.ts` (or rename to `__deriveBytesForTesting`) so production code can't reach for it. (Review §1.)
+- [x] **P1.8** Add comments explaining the `as BufferSource` casts in `kdf.ts` and `aead.ts` (TS+lib.dom DOM-vs-Worker mismatch). (Review §1.)
+- [x] **P1.9** Wrap `backend.set` in `storage/vault.ts` with a try/catch that surfaces `QUOTA_BYTES_PER_ITEM` cleanly so a 50MB cert paste fails loudly instead of silently. (Review §2.)
+- [x] **P1.10** Extract duplicated OKLCH theme tokens into `src/styles/theme.css` shared by `popup/style.css` and `options/style.css`. (Review §10, also nice-to-have #4.)
 
 ---
 

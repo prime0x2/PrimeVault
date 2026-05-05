@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/prime0x2/PrimeVault/security/policy
+    about: Please report security issues privately by email — see SECURITY.md.
+  - name: Question or discussion
+    url: https://github.com/prime0x2/PrimeVault/discussions
+    about: Open-ended questions and ideas belong in Discussions.

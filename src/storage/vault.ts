@@ -28,6 +28,32 @@ export type VaultState =
   | { kind: 'ready'; envelope: Envelope };
 
 /**
+ * Thrown when {@link writeVault} hits a backend storage limit. The atomic
+ * write protocol means the on-disk state is still consistent — the failure
+ * happens *before* the canonical `pv:envelope` slot is overwritten. The
+ * caller should surface a friendly "vault too large" message rather than a
+ * generic "internal error."
+ */
+export class VaultQuotaError extends Error {
+  constructor(message: string, options?: { cause: unknown }) {
+    super(message, options);
+    this.name = 'VaultQuotaError';
+  }
+}
+
+/**
+ * Heuristic match for `chrome.storage.local` quota errors. The MV3 runtime
+ * surfaces quota failures as plain `Error`s with messages mentioning
+ * `QUOTA_BYTES_PER_ITEM` (~8KB per value) or `QUOTA_BYTES` (~10MB total).
+ * This matches both forms case-insensitively so the session layer can map
+ * them onto a typed UI message without a vendor-specific type.
+ */
+function isQuotaError(err: unknown): boolean {
+  if (!(err instanceof Error)) return false;
+  return /quota/i.test(err.message);
+}
+
+/**
  * Read the vault envelope from storage, recovering from any leftover atomic
  * write. Throws {@link import('../crypto/envelope').EnvelopeFormatError} if
  * the stored envelope is malformed and there is no recoverable `.next`.
@@ -65,14 +91,31 @@ export async function writeVault(
   envelope: Envelope,
 ): Promise<void> {
   const validated = parseEnvelope(envelope);
-  await backend.set(STORAGE_KEYS.envelopeNext, validated);
-  await backend.set(STORAGE_KEYS.envelope, validated);
-  await backend.remove(STORAGE_KEYS.envelopeNext);
+  try {
+    await backend.set(STORAGE_KEYS.envelopeNext, validated);
+    await backend.set(STORAGE_KEYS.envelope, validated);
+    await backend.remove(STORAGE_KEYS.envelopeNext);
+  } catch (err) {
+    if (isQuotaError(err)) {
+      throw new VaultQuotaError(
+        'Storage quota exceeded while writing the vault.',
+        { cause: err },
+      );
+    }
+    throw err;
+  }
 }
 
 /**
  * Remove all vault keys. Used by the "reset vault" path in settings (§10).
- * Does NOT touch prefs or meta.
+ *
+ * Intentionally only removes the envelope keys. `pv:prefs` (theme, accent,
+ * auto-lock duration, etc.) is unencrypted UX state the user shouldn't have
+ * to reconfigure after a reset. `pv:meta` is reserved for forward-compat
+ * install-level metadata (see {@link STORAGE_KEYS}); it survives a reset
+ * because "reset" means "delete the secrets I trusted you with," not
+ * "delete the install." If a future migration needs to clear meta on
+ * reset, it should land deliberately, not as a side effect of this fn.
  */
 export async function clearVault(backend: StorageBackend): Promise<void> {
   await backend.remove(STORAGE_KEYS.envelope);

@@ -67,6 +67,10 @@ export function Vault({ onLocked }: VaultProps): React.ReactElement {
     try {
       await popupClient.send({ kind: 'lock' });
     } finally {
+      // Fail-safe: even if the SW lock message itself errors (eviction
+      // race, transient transport failure), the popup still routes to the
+      // locked state. The SW's source of truth is its in-memory key, and
+      // a locked-looking UI is strictly safer than a stuck "locking…".
       setLocking(false);
       onLocked();
     }

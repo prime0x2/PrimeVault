@@ -5,7 +5,12 @@ import {
   STORAGE_KEYS,
   type StorageBackend,
 } from '../../src/storage/client';
-import { clearVault, readVault, writeVault } from '../../src/storage/vault';
+import {
+  clearVault,
+  readVault,
+  VaultQuotaError,
+  writeVault,
+} from '../../src/storage/vault';
 
 const utf8 = (s: string) => new TextEncoder().encode(s);
 const TEST_ITERATIONS = 1000;
@@ -159,6 +164,27 @@ describe('writeVault', () => {
     expect(state.kind).toBe('ready');
     expect(real.snapshot()[STORAGE_KEYS.envelopeNext]).toBeUndefined();
     expect(real.snapshot()[STORAGE_KEYS.envelope]).toBeDefined();
+  });
+
+  it('translates a quota-shaped backend error into VaultQuotaError', async () => {
+    const real = createMemoryBackend();
+    const env = await freshEnvelope();
+    const quotaBackend: StorageBackend = {
+      ...real,
+      set: async () => {
+        throw new Error('QUOTA_BYTES_PER_ITEM exceeded');
+      },
+    };
+    await expect(writeVault(quotaBackend, env)).rejects.toBeInstanceOf(
+      VaultQuotaError,
+    );
+  });
+
+  it('rethrows non-quota errors as-is', async () => {
+    const real = createMemoryBackend();
+    const env = await freshEnvelope();
+    const flaky = failAfter(real, 'set', 0);
+    await expect(writeVault(flaky, env)).rejects.toThrow('simulated crash');
   });
 
   it('survives a crash before the final remove (.next still cleared on next read)', async () => {
