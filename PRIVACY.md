@@ -33,7 +33,7 @@ Neither of these leaves your device. There is no remote server, no analytics end
 - **Password verification:** "Decrypt to verify." There is no separate password hash. On unlock, we attempt to decrypt the stored ciphertext; the GCM authentication tag tells us whether the password was correct. This avoids exposing a second offline brute-force target.
 - **Recovery:** None. If you lose your master password, your vault is permanently unrecoverable. This is the cost of zero-knowledge encryption.
 
-The full cryptographic design and threat model live in [`SPEC.md`](./SPEC.md) §3 and §4.
+The full cryptographic design and threat model live in [`specs/2026-05-04_spec.md`](./specs/2026-05-04_spec.md) §3 and §4.
 
 ## Permissions
 

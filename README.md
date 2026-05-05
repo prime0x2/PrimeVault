@@ -13,11 +13,11 @@ PrimeVault is a small, auditable Chrome extension for developers who routinely p
 - **Encrypted backup:** export your vault to a file, restore on a new machine.
 - **Open source, MIT-licensed.**
 
-Full design and threat model: [`SPEC.md`](./SPEC.md). Privacy policy: [`PRIVACY.md`](./PRIVACY.md). Store listing copy: [`STORE_LISTING.md`](./STORE_LISTING.md).
+Full design and threat model: [`specs/2026-05-04_spec.md`](./specs/2026-05-04_spec.md). Privacy policy: [`PRIVACY.md`](./PRIVACY.md). Store listing copy: [`STORE_LISTING.md`](./STORE_LISTING.md).
 
 ## Status
 
-**v0.0.0 — pre-submission.** Phases 1–13 complete (skeleton, crypto, storage, messaging, onboarding, unlock, vault list, edit, search, options, backup, CI, polish). Phase 14 is submission prep; Phase 15 is the actual store submission. See `SPEC.md` §18 for the build plan.
+**v0.0.0 — pre-submission.** Phases 1–13 complete (skeleton, crypto, storage, messaging, onboarding, unlock, vault list, edit, search, options, backup, CI, polish). Phase 14 is submission prep; Phase 15 is the actual store submission. See [`specs/2026-05-04_spec.md`](./specs/2026-05-04_spec.md) §18 for the build plan.
 
 245 unit tests passing. CI runs typecheck, lint, test, and build on every PR.
 
@@ -89,7 +89,7 @@ If any step deviates from expected behavior, that's a release blocker.
 
 ## Repository layout
 
-See [`SPEC.md`](./SPEC.md) §14 for the full layout. Briefly:
+See [`specs/2026-05-04_spec.md`](./specs/2026-05-04_spec.md) §14 for the full layout. Briefly:
 
 ```
 src/
@@ -111,7 +111,7 @@ Issues and PRs welcome. Before submitting:
 1. Run `pnpm compile && pnpm lint && pnpm test` — these are what CI runs.
 2. New features should land with tests. The repo has 240+ tests as a baseline; please don't shrink that.
 3. UI changes should preserve accessibility (every interactive element keyboard-reachable and labeled).
-4. Crypto changes need extra care. Read `SPEC.md` §3 (threat model) and §4 (cryptographic design) first; flag the change in the PR description.
+4. Crypto changes need extra care. Read [`specs/2026-05-04_spec.md`](./specs/2026-05-04_spec.md) §3 (threat model) and §4 (cryptographic design) first; flag the change in the PR description.
 
 For substantive design changes, open an issue first to discuss before writing code.
 
