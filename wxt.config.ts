@@ -28,10 +28,19 @@ export default defineConfig({
     name: 'PrimeVault',
     description:
       'Encrypted vault for API keys & tokens. Zero-knowledge, open source, lives in your toolbar.',
-    // `offscreen` is required to call `navigator.clipboard.writeText('')`
-    // from the SW context — service workers don't expose the clipboard API
-    // directly, so we proxy through a transient offscreen document. SPEC §10.4.
-    permissions: ['storage', 'alarms', 'offscreen'],
+    // Manifest hygiene for Chrome Web Store submission. SPEC §15.4.
+    homepage_url: 'https://github.com/prime0x2/PrimeVault',
+    author: { email: 'prime0x2@gmail.com' },
+    // Permission set is intentionally minimal — see STORE_LISTING.md §
+    // "Permission justifications" for the one-liner per permission, which
+    // is what the store review form asks for.
+    //   storage         — encrypted envelope + user prefs (chrome.storage.local)
+    //   alarms          — auto-lock + clipboard auto-clear (survives SW eviction)
+    //   offscreen       — clipboard auto-clear runs in an offscreen document
+    //                     because service workers can't access clipboard APIs
+    //   clipboardWrite  — offscreen doc's writeText('') is not in a user-gesture
+    //                     context, so the permission must be explicit
+    permissions: ['storage', 'alarms', 'offscreen', 'clipboardWrite'],
     action: {
       default_title: 'PrimeVault',
     },
