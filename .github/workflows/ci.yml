@@ -1,0 +1,63 @@
+# PrimeVault CI. Runs the four local gates on every PR and on every push
+# to main. Spec §12.2.
+#
+# Single-job design is intentional. pnpm install is the slow step (~20s
+# warm cache, ~45s cold); splitting typecheck/lint/test/build across
+# parallel jobs would mean paying that cost 4× without saving wall time
+# overall. As one job, total time is ~1m and each step shows up as its
+# own line in the Actions UI so failures are still easy to attribute.
+
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# Cancel in-progress runs on the same ref when a newer commit lands. Saves
+# CI minutes on rebases and force-pushes.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: typecheck · lint · test · build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up pnpm
+        # Reads packageManager from package.json so this stays in sync
+        # with the local pnpm version automatically.
+        uses: pnpm/action-setup@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install dependencies
+        # --frozen-lockfile ensures CI fails on lockfile drift instead of
+        # silently picking up a different dependency tree. SPEC §12.5.
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm compile
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Test
+        run: pnpm test
+
+      - name: Build
+        run: pnpm build

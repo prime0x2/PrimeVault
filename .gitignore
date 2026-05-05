@@ -1,0 +1,55 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Dependencies
+node_modules
+
+# WXT generated
+.output
+.wxt
+stats.html
+stats-*.json
+web-ext.config.ts
+
+# Build artifacts at repo root (pnpm pack, manual zips, Chrome key files)
+*.zip
+*.tgz
+*.crx
+*.pem
+
+# Test / coverage output (Vitest, used from phase 2 onward)
+coverage
+.nyc_output
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Editor directories and files
+# Track only project-essential VS Code config (recommended extensions and
+# workspace settings that enforce Biome as the formatter/linter).
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Auto commit files
+auto_commit_changes.sh
+auto_commit_prompt.md
+auto_commit_plan.json
+
+# Claude Code per-user state (project-shared settings.json stays tracked)
+.claude/settings.local.json
