@@ -26,7 +26,7 @@ permissions:
 
 jobs:
   verify:
-    name: typecheck · lint · test · build
+    name: typecheck · lint · test · build · bundle-size
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
@@ -61,3 +61,6 @@ jobs:
 
       - name: Build
         run: pnpm build
+
+      - name: Bundle-size budget
+        run: pnpm bundle-size-check

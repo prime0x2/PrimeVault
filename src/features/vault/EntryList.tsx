@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import type { ClipboardClearSeconds } from '../../storage/prefs';
 import type { Entry } from '../../storage/schema';
 import { EntryRow } from './EntryRow';
@@ -25,18 +25,25 @@ export function EntryList({
     null,
   );
 
+  // Default sort per SPEC §10.8: lastUsedAt desc → updatedAt desc → name asc.
+  // Memoized — rerunning the sort every render shows up under React profiler
+  // even at modest entry counts because we set transient UI state (revealed,
+  // expanded, editing) frequently.
+  const sorted = useMemo(
+    () =>
+      entries.slice().sort((a, b) => {
+        const lu = (b.lastUsedAt ?? '').localeCompare(a.lastUsedAt ?? '');
+        if (lu !== 0) return lu;
+        const up = b.updatedAt.localeCompare(a.updatedAt);
+        if (up !== 0) return up;
+        return a.name.localeCompare(b.name);
+      }),
+    [entries],
+  );
+
   if (entries.length === 0) {
     return filtered ? <NoMatchesState /> : <EmptyState />;
   }
-
-  // Default sort per SPEC §10.8: lastUsedAt desc → updatedAt desc → name asc.
-  const sorted = entries.slice().sort((a, b) => {
-    const lu = (b.lastUsedAt ?? '').localeCompare(a.lastUsedAt ?? '');
-    if (lu !== 0) return lu;
-    const up = b.updatedAt.localeCompare(a.updatedAt);
-    if (up !== 0) return up;
-    return a.name.localeCompare(b.name);
-  });
 
   function clearTransient(id: string) {
     setExpandedId((cur) => (cur === id ? null : cur));

@@ -38,6 +38,14 @@ let scorerPromise: Promise<Scorer> | null = null;
  * Lazily load zxcvbn-ts and its English+common dictionaries, returning a
  * narrow `Scorer`. The first call kicks off the chunk download (cached for
  * the lifetime of the popup); subsequent calls reuse the same promise.
+ *
+ * Bundle-size note: `language-common` (~1.2MB) carries the keyboard
+ * adjacency graphs that catch "qwerty"-style walks — non-negotiable.
+ * `language-en` (~465KB) carries the English dictionary + translation
+ * strings. Trimming either would degrade strength detection in ways
+ * users feel ("hunter2" should fail; without the dictionary it scores
+ * higher than it should). The chunks are only loaded on the onboarding
+ * and change-password screens, so the steady-state popup never pays.
  */
 export function loadStrengthScorer(): Promise<Scorer> {
   if (scorerPromise === null) {

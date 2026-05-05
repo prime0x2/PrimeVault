@@ -85,18 +85,18 @@ These are the structural items. Bigger but isolated; do them after P0–P3 so th
 
 Not measurable on small vaults, but cheap to fix.
 
-- [ ] **P5.1** `useMemo` the sorted entries array in `EntryList.tsx:29` so we don't `.sort()` on every render. (Review §9.)
-- [ ] **P5.2** Audit zxcvbn lang-pack chunk sizes (1.2MB + 465KB). Decide if `@zxcvbn-ts/language-common` plus `@zxcvbn-ts/language-en` are both pulling weight, or if one can be trimmed. (Review §9.)
-- [ ] **P5.3** Throttle / batch `lastUsedAt` + `copyCount` writes so 1000 rapid copies don't trigger 1000 disk writes. Reasonable batching window: 1–2s debounce. (Review §8.)
+- [x] **P5.1** `useMemo` the sorted entries array in `EntryList.tsx:29` so we don't `.sort()` on every render. (Review §9.)
+- [x] **P5.2** Audited zxcvbn lang-packs. Both pulling weight: `language-common` carries the keyboard-adjacency graphs (catches "qwerty"-walks), `language-en` carries the English dictionary + translations. Trimming either would degrade strength detection users would feel. Lazy-loaded only on onboarding + change-password — steady-state popup is unaffected. Decision recorded as a comment in `strength.ts`.
+- [—] **P5.3** Throttle / batch `lastUsedAt` + `copyCount` writes so 1000 rapid copies don't trigger 1000 disk writes. *Deferred to v0.2.* Correct implementation requires an in-memory pending map + flush timer that survives `readPlaintext` cache-busts; the simpler rate-limit shapes are unsound (drop counts on burst). Real-world copy rates are human-driven, so the current implementation is fine in practice. (Review §8.)
 - [—] **P5.4** Optimize `storage.onChanged` listener so a theme change doesn't re-validate prefs end-to-end. *Deferred — measured cost is negligible.* (Review §9.)
 
 ---
 
 ## P6 — Documentation gaps
 
-- [ ] **P6.1** Add `docs/architecture.md` with a Mermaid diagram of popup ↔ SW ↔ offscreen ↔ storage. (Review §7, nice-to-have #5.)
-- [ ] **P6.2** Update SPEC §3 (threat model) to explicitly note: "Chrome SW eviction = surprise auto-lock from user's POV" — fail-safe but worth documenting. (Review §8.)
-- [ ] **P6.3** Update SPEC §9 to call out that the strength-meter check is client-side only and the threat model accepts that. (Review §8.)
+- [x] **P6.1** Add `docs/architecture.md` with a Mermaid diagram of popup ↔ SW ↔ offscreen ↔ storage. (Review §7, nice-to-have #5.)
+- [x] **P6.2** Update SPEC §3 (threat model) to explicitly note: "Chrome SW eviction = surprise auto-lock from user's POV" — fail-safe but worth documenting. (Review §8.)
+- [x] **P6.3** Update SPEC §9 to call out that the strength-meter check is client-side only and the threat model accepts that. (Review §8.)
 
 ---
 
@@ -111,8 +111,8 @@ The reviewer was clear these are v0.2 territory, not pre-submission. Listed for 
 
 ## P8 — CI / tooling
 
-- [ ] **P8.1** Add a bundle-size budget step in `ci.yml` that fails if popup or background bundles grow more than X% over a baseline. (Review §6, nice-to-have #9.)
-- [ ] **P8.2** Move the `.wxt/chrome-data` mkdir to `postinstall` (in addition to `dev`) so first-time clones don't see the ENOENT. (Review §6.)
+- [x] **P8.1** Add a bundle-size budget step in `ci.yml` that fails if popup or background bundles grow more than X% over a baseline. (Review §6, nice-to-have #9.)
+- [x] **P8.2** Move the `.wxt/chrome-data` mkdir to `postinstall` (in addition to `dev`) so first-time clones don't see the ENOENT. (Review §6.)
 
 ---
 

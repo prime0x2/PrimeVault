@@ -25,7 +25,8 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "submit-check": "node scripts/submit-check.mjs",
-    "postinstall": "wxt prepare"
+    "bundle-size-check": "node scripts/bundle-size.mjs",
+    "postinstall": "wxt prepare && node -e \"require('node:fs').mkdirSync('.wxt/chrome-data',{recursive:true})\""
   },
   "dependencies": {
     "@zxcvbn-ts/core": "^3.0.4",
