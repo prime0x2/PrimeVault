@@ -67,17 +67,17 @@ The reviewer called `noUncheckedIndexedAccess` "the single biggest win you can g
 
 These are the structural items. Bigger but isolated; do them after P0–P3 so the diffs stay reviewable.
 
-- [ ] **P4.1** Split `src/messaging/session.ts` (666 LOC) into:
+- [x] **P4.1** Split `src/messaging/session.ts` (666 LOC) into:
   - `session.ts` — core lifecycle (status / setup / unlock / lock / changePassword / resetVault)
   - `session-entries.ts` — CRUD (get / add / update / delete / markUsed)
   - `session-backup.ts` — export / import
   (Review §3, §11, nice-to-have #6.)
-- [ ] **P4.2** Split `EntryRow.tsx` (278 LOC):
+- [x] **P4.2** Split `EntryRow.tsx` (278 LOC):
   - Extract `<RowActions>` for the icon-button cluster
   - Extract `useCopy` hook for copy / banner / clipboard side-effects
   (Review §4.)
-- [ ] **P4.3** Unify `usePrefs` (options) and `usePopupPrefs` (popup) into one hook with a `subscribe: boolean` flag. (Review §4.)
-- [ ] **P4.4** Tighten the `as never` cast in `src/messaging/client.ts:43` using mapped-type tricks so `client.send` doesn't fall back to `unknown`/`never`. (Review §3, §10.)
+- [x] **P4.3** Unify `usePrefs` (options) and `usePopupPrefs` (popup) into one hook with a `subscribe: boolean` flag. (Review §4.)
+- [x] **P4.4** Tighten the `as never` cast in `src/messaging/client.ts:43` using mapped-type tricks so `client.send` doesn't fall back to `unknown`/`never`. (Review §3, §10.)
 
 ---
 

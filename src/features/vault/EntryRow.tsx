@@ -1,33 +1,17 @@
-import {
-  Check,
-  ChevronDown,
-  ChevronRight,
-  Copy,
-  Eye,
-  EyeOff,
-  Trash2,
-} from 'lucide-react';
+import { ChevronDown, ChevronRight } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Button } from '../../components/ui/button';
 import { cn } from '../../lib/cn';
 import { popupClient } from '../../messaging/popup-client';
-import {
-  type ClipboardClearSeconds,
-  effectiveClipboardClearSeconds,
-} from '../../storage/prefs';
+import type { ClipboardClearSeconds } from '../../storage/prefs';
 import type { Entry } from '../../storage/schema';
 import { EntryDetails } from './EntryDetails';
 import { EntryForm } from './EntryForm';
 import { ExpiryBadge } from './ExpiryBadge';
+import { RowActions } from './RowActions';
+import { useCopy } from './useCopy';
 
 const REVEAL_TIMEOUT_MS = 8_000;
-const COPY_FLASH_MS = 1_000;
-/**
- * Inline "Copied — clears in Xs" banner stays visible until the clear
- * actually runs, capped so the row doesn't jiggle if the user picks
- * "Never". A separate cap from the actual SW-scheduled clear.
- */
-const COPY_BANNER_MAX_MS = 8_000;
 const MASKED_GLYPH = '•';
 const MAX_MASK_LENGTH = 16;
 
@@ -75,37 +59,29 @@ export function EntryRow(props: EntryRowProps): React.ReactElement {
     clipboardClearSeconds,
   } = props;
 
-  const [copyFlash, setCopyFlash] = useState(false);
-  const [copyBanner, setCopyBanner] = useState(false);
-  const [busy, setBusy] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
+  const {
+    copy,
+    busy: copying,
+    copyFlash,
+    copyBanner,
+    displaySeconds,
+  } = useCopy({
+    entryId: entry.id,
+    entryValue: entry.value,
+    clipboardClearSeconds,
+    onCopied,
+  });
+
+  // Auto-mask after a fixed timeout while the popup is open. The popup is
+  // destroyed on close, so revealedId resets to null on next open without
+  // any extra plumbing.
   useEffect(() => {
     if (!revealed) return;
     const handle = window.setTimeout(onMask, REVEAL_TIMEOUT_MS);
     return () => window.clearTimeout(handle);
   }, [revealed, onMask]);
-
-  useEffect(() => {
-    if (!copyFlash) return;
-    const handle = window.setTimeout(() => setCopyFlash(false), COPY_FLASH_MS);
-    return () => window.clearTimeout(handle);
-  }, [copyFlash]);
-
-  // Chrome alarms floor anything < 30s to ~30s, so the banner shows the
-  // delay the user will actually experience, not the raw setting.
-  const displaySeconds = effectiveClipboardClearSeconds(clipboardClearSeconds);
-
-  useEffect(() => {
-    if (!copyBanner) return;
-    // Hide the banner by the time the actual clear runs (or after a cap
-    // for "Never"). Doesn't have to match exactly — purely cosmetic.
-    const ms = Math.min(
-      displaySeconds > 0 ? displaySeconds * 1000 : COPY_BANNER_MAX_MS,
-      COPY_BANNER_MAX_MS,
-    );
-    const handle = window.setTimeout(() => setCopyBanner(false), ms);
-    return () => window.clearTimeout(handle);
-  }, [copyBanner, displaySeconds]);
 
   if (editing) {
     return (
@@ -115,42 +91,18 @@ export function EntryRow(props: EntryRowProps): React.ReactElement {
     );
   }
 
-  async function copy() {
-    if (busy) return;
-    setBusy(true);
-    try {
-      await navigator.clipboard.writeText(entry.value);
-      setCopyFlash(true);
-      setCopyBanner(true);
-
-      // Schedule the auto-clear in the SW so it survives the popup
-      // closing. The SW uses chrome.alarms + an offscreen document. Best
-      // effort: errors are non-fatal — the user has been told what we
-      // tried to do, and the clipboard write itself already succeeded.
-      const delayMs = clipboardClearSeconds * 1000;
-      popupClient
-        .send({ kind: 'scheduleClipboardClear', delayMs })
-        .catch(() => undefined);
-
-      popupClient
-        .send({ kind: 'markUsed', id: entry.id })
-        .then(() => onCopied())
-        .catch(() => undefined);
-    } finally {
-      setBusy(false);
-    }
-  }
-
   async function confirmDelete() {
-    if (busy) return;
-    setBusy(true);
+    if (deleting) return;
+    setDeleting(true);
     try {
       await popupClient.send({ kind: 'deleteEntry', id: entry.id });
       onDeleted();
     } finally {
-      setBusy(false);
+      setDeleting(false);
     }
   }
+
+  const busy = copying || deleting;
 
   return (
     <li
@@ -180,55 +132,16 @@ export function EntryRow(props: EntryRowProps): React.ReactElement {
           <span className="truncate font-medium text-sm">{entry.name}</span>
           <ExpiryBadge expiresAt={entry.expiresAt} />
         </button>
-        <div className="flex items-center gap-0.5">
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            className="h-7 w-7"
-            onClick={revealed ? onMask : onReveal}
-            aria-label={
-              revealed
-                ? `Hide value for ${entry.name}`
-                : `Reveal value for ${entry.name}`
-            }
-            title={revealed ? 'Hide' : 'Reveal'}
-          >
-            {revealed ? (
-              <EyeOff className="h-3.5 w-3.5" />
-            ) : (
-              <Eye className="h-3.5 w-3.5" />
-            )}
-          </Button>
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            className="h-7 w-7"
-            onClick={copy}
-            disabled={busy}
-            aria-label={`Copy value for ${entry.name}`}
-            title="Copy"
-          >
-            {copyFlash ? (
-              <Check className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
-            ) : (
-              <Copy className="h-3.5 w-3.5" />
-            )}
-          </Button>
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            className="h-7 w-7 text-muted-foreground hover:text-destructive"
-            onClick={onRequestDelete}
-            disabled={busy}
-            aria-label={`Delete ${entry.name}`}
-            title="Delete"
-          >
-            <Trash2 className="h-3.5 w-3.5" />
-          </Button>
-        </div>
+        <RowActions
+          entryName={entry.name}
+          revealed={revealed}
+          busy={busy}
+          copyFlash={copyFlash}
+          onReveal={onReveal}
+          onMask={onMask}
+          onCopy={copy}
+          onRequestDelete={onRequestDelete}
+        />
       </div>
 
       <code className="block min-h-[1rem] truncate pl-4 font-mono text-muted-foreground text-xs">
@@ -263,7 +176,7 @@ export function EntryRow(props: EntryRowProps): React.ReactElement {
               variant="ghost"
               size="sm"
               onClick={onCancelDelete}
-              disabled={busy}
+              disabled={deleting}
             >
               Cancel
             </Button>
@@ -272,7 +185,7 @@ export function EntryRow(props: EntryRowProps): React.ReactElement {
               variant="destructive"
               size="sm"
               onClick={confirmDelete}
-              disabled={busy}
+              disabled={deleting}
             >
               Delete
             </Button>
