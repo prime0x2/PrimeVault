@@ -24,6 +24,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
+    "submit-check": "node scripts/submit-check.mjs",
     "postinstall": "wxt prepare"
   },
   "dependencies": {

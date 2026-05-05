@@ -53,3 +53,7 @@ auto_commit_plan.json
 
 # Claude Code per-user state (project-shared settings.json stays tracked)
 .claude/settings.local.json
+
+# Local-only notes (private TODO list, scratch files, etc.)
+TODO_MANUAL.md
+NOTES.local.md

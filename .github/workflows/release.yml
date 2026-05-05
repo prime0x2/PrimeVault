@@ -1,0 +1,101 @@
+# PrimeVault release workflow. Triggers on `v*` tags. SPEC §12.2.
+#
+# What it does:
+#   1. Re-runs the same gates as ci.yml (typecheck/lint/test/build).
+#      We don't trust that "main is green" still holds at tag time —
+#      something might have landed since the last CI pass.
+#   2. Verifies that the version in package.json matches the tag exactly.
+#      A mismatch is a release blocker; a wrong version on the store is
+#      worse than a delayed release.
+#   3. Builds and zips the production artifact.
+#   4. Creates a GitHub Release with the ZIP attached and an
+#      auto-generated notes section. Manual upload to the Chrome Web Store
+#      still happens through the dashboard (SPEC §12.4: v1 is manual).
+#
+# To cut a release:
+#   pnpm version <patch|minor|major>   # bumps package.json AND tags
+#   git push --follow-tags
+#
+# This workflow then handles the rest.
+
+name: release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: build · verify · zip · publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Verify tag matches package.json version
+        # The tag is `v1.2.3`; package.json has `"version": "1.2.3"`. If
+        # they don't match, fail loudly — the store will get a confusing
+        # version otherwise.
+        run: |
+          TAG="${GITHUB_REF#refs/tags/}"
+          PKG_VERSION="v$(node -p "require('./package.json').version")"
+          if [ "$TAG" != "$PKG_VERSION" ]; then
+            echo "::error::Tag ${TAG} does not match package.json version ${PKG_VERSION}"
+            exit 1
+          fi
+          echo "Tag and package.json version both = ${TAG}"
+
+      - name: Typecheck
+        run: pnpm compile
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Test
+        run: pnpm test
+
+      - name: Build
+        run: pnpm build
+
+      - name: Zip
+        run: pnpm zip
+
+      - name: Locate ZIP artifact
+        # WXT names the zip after the package and version, e.g.
+        # primevault-0.1.0-chrome.zip. Lock onto whatever it produced
+        # so the next step doesn't have to guess.
+        id: zip
+        run: |
+          ZIP_PATH=$(ls .output/*.zip | head -n1)
+          echo "path=${ZIP_PATH}" >> "$GITHUB_OUTPUT"
+          echo "name=$(basename "${ZIP_PATH}")" >> "$GITHUB_OUTPUT"
+          echo "Found: ${ZIP_PATH}"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          # Tag name is taken from the trigger; no need to pass tag_name.
+          name: ${{ github.ref_name }}
+          generate_release_notes: true
+          fail_on_unmatched_files: true
+          files: ${{ steps.zip.outputs.path }}
