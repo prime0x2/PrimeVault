@@ -45,9 +45,9 @@ Small, isolated changes. Bundling them into one or two commits is fine.
 
 Reviewer flagged the coverage config as "measuring 1/4 of the codebase" and the lack of UI tests as "the single biggest test-suite improvement available."
 
-- [ ] **P2.1** Expand `vitest.config.ts` coverage `include` to cover all of `src/` (not just `crypto/`, `storage/`, `lib/`). Update README's coverage claim if it changes the headline number. (Review §5, nice-to-have #2.)
-- [ ] **P2.2** Add a regression test that mutates the envelope's `version` field and asserts decrypt fails — locks in the AAD binding. (Review §1.)
-- [ ] **P2.3** Wire up `@testing-library/react` + `happy-dom` and write component tests for the form-validation paths in Onboarding, ChangePassword, and AddEntry/EditEntry forms. (Review §5, nice-to-have #3.)
+- [x] **P2.1** Expand `vitest.config.ts` coverage `include` to cover all of `src/` (excludes wiring entrypoints + shadcn primitives). Honest numbers now: 49% statements / 30% branches.
+- [x] **P2.2** Add a regression test that mutates the envelope's `version` field and asserts decrypt fails — locks in the AAD binding. (Review §1.)
+- [x] **P2.3** Wire up `@testing-library/react` + `happy-dom`. First batch of UI tests covers `EntryForm` (validation, submit, duplicate-name error) and `SearchBar` (status chip, clear button, Escape key). More forms can land later under the same harness.
 - [—] **P2.4** Property tests with `fast-check` for `entryMatches` / `normalizeTags`. *Deferred to v0.2.* (Review §5.)
 - [—] **P2.5** Real-Chrome offscreen-clipboard integration test. *Deferred to v0.2 — needs Playwright pipeline.* (Review §5.)
 

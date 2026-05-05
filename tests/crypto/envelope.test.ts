@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   ENVELOPE_VERSION,
+  type Envelope,
   EnvelopeFormatError,
   openEnvelope,
   parseEnvelope,
@@ -102,6 +103,23 @@ describe('envelope', () => {
       expect(fromUtf8(versionAad(ENVELOPE_VERSION))).toBe(
         `primevault.envelope.v${ENVELOPE_VERSION}`,
       );
+    });
+
+    /*
+     * Regression: silent on-disk version tampering must cause a decrypt
+     * failure, not a misinterpretation. We simulate that by mutating the
+     * version field after sealing — openEnvelope passes the (mutated)
+     * version to AES-GCM as additional authenticated data, the auth tag
+     * no longer matches, and decryption throws. This is the property
+     * that lets us evolve the on-disk envelope schema independently of
+     * what's actually inside the ciphertext.
+     */
+    it('rejects an envelope whose version field has been mutated', async () => {
+      const { envelope } = await sealEnvelope('pw', utf8('payload'), {
+        iterations: TEST_ITERATIONS,
+      });
+      const mutated = { ...envelope, version: 2 } as unknown as Envelope;
+      await expect(openEnvelope(mutated, 'pw')).rejects.toThrow();
     });
   });
 
