@@ -57,3 +57,4 @@ auto_commit_plan.json
 # Local-only notes (private TODO list, scratch files, etc.)
 TODO_MANUAL.md
 NOTES.local.md
+review/

@@ -11,6 +11,10 @@ import { useEffect, useState } from 'react';
 import { Button } from '../../components/ui/button';
 import { cn } from '../../lib/cn';
 import { popupClient } from '../../messaging/popup-client';
+import {
+  type ClipboardClearSeconds,
+  effectiveClipboardClearSeconds,
+} from '../../storage/prefs';
 import type { Entry } from '../../storage/schema';
 import { EntryDetails } from './EntryDetails';
 import { EntryForm } from './EntryForm';
@@ -48,7 +52,7 @@ interface EntryRowProps {
   onDeleted: () => void;
   onCopied: () => void;
   /** From prefs. 0 disables auto-clear. */
-  clipboardClearSeconds: number;
+  clipboardClearSeconds: ClipboardClearSeconds;
 }
 
 export function EntryRow(props: EntryRowProps): React.ReactElement {
@@ -87,19 +91,21 @@ export function EntryRow(props: EntryRowProps): React.ReactElement {
     return () => window.clearTimeout(handle);
   }, [copyFlash]);
 
+  // Chrome alarms floor anything < 30s to ~30s, so the banner shows the
+  // delay the user will actually experience, not the raw setting.
+  const displaySeconds = effectiveClipboardClearSeconds(clipboardClearSeconds);
+
   useEffect(() => {
     if (!copyBanner) return;
     // Hide the banner by the time the actual clear runs (or after a cap
     // for "Never"). Doesn't have to match exactly — purely cosmetic.
     const ms = Math.min(
-      clipboardClearSeconds > 0
-        ? clipboardClearSeconds * 1000
-        : COPY_BANNER_MAX_MS,
+      displaySeconds > 0 ? displaySeconds * 1000 : COPY_BANNER_MAX_MS,
       COPY_BANNER_MAX_MS,
     );
     const handle = window.setTimeout(() => setCopyBanner(false), ms);
     return () => window.clearTimeout(handle);
-  }, [copyBanner, clipboardClearSeconds]);
+  }, [copyBanner, displaySeconds]);
 
   if (editing) {
     return (
@@ -234,8 +240,8 @@ export function EntryRow(props: EntryRowProps): React.ReactElement {
           className="pl-4 text-[11px] text-emerald-700 dark:text-emerald-300"
           aria-live="polite"
         >
-          {clipboardClearSeconds > 0
-            ? `Copied — clears in ${clipboardClearSeconds}s.`
+          {displaySeconds > 0
+            ? `Copied — clears in ${displaySeconds}s.`
             : 'Copied to clipboard.'}
         </p>
       )}

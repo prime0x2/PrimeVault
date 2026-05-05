@@ -14,14 +14,13 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done · `[—]` consciously def
 
 These are the items the reviewer flagged as "fix before clicking submit." Plus the Hard-Truth section's listing-copy tightening, which is also pre-submission because it's what Chrome reviewers read.
 
-- [ ] **P0.1** Fix the "clipboard auto-clear" banner / Settings copy so it doesn't lie about a 15s clear that Chrome floors to 30s.
+- [x] **P0.1** Fix the "clipboard auto-clear" banner / Settings copy so it doesn't lie about a 15s clear that Chrome floors to 30s.
   - Reviewer's note: `EntryRow.tsx:237` banner says "clears in 15s" but `chrome.alarms` minimum in production is 30s.
   - Decision: option (b) from review — keep the banner honest by adding a Settings copy note ("Chrome minimum is 30 seconds; shorter values are clamped") AND clamp the banner to `Math.max(seconds, 30)` so the displayed countdown matches reality. Belt + suspenders.
-- [ ] **P0.2** Triage the open Dependabot alert.
-  - Either bump the affected dep with `pnpm up <pkg>` or document in `TODO_MANUAL.md` why it's not exploitable. Don't tag v0.1.0 with an open moderate alert.
-- [ ] **P0.3** Tighten `clipboardWrite` permission justification in `STORE_LISTING.md`.
-  - Reviewer's recommended copy: "Required to overwrite the user's clipboard with empty text after the user-configured auto-clear timeout, since the offscreen document running this overwrite cannot rely on a user gesture."
-- [ ] **P0.4** Surface the `offscreen` justification cleanly in `STORE_LISTING.md` (currently buried; reviewers will see this verbatim in the form).
+- [x] **P0.2** Triage the open Dependabot alert.
+  - GHSA-w5hq-g745-h8pq (uuid <14, missing buffer bounds check in v3/v5/v6). Devdep-only chain `wxt > web-ext-run > node-notifier > uuid@8.3.2`; node-notifier calls `v4()` without a buffer so the CVE's preconditions never hold. Documented in `TODO_MANUAL.md`.
+- [x] **P0.3** Tighten `clipboardWrite` permission justification in `STORE_LISTING.md`.
+- [x] **P0.4** Surface the `offscreen` justification cleanly in `STORE_LISTING.md`.
 
 ---
 

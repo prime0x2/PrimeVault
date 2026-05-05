@@ -4,6 +4,7 @@ import { Label } from '../../components/ui/label';
 import {
   AUTO_LOCK_MINUTE_OPTIONS,
   type AutoLockMinutes,
+  CHROME_ALARMS_MIN_SECONDS,
   CLIPBOARD_CLEAR_OPTIONS,
   type ClipboardClearSeconds,
   type Prefs,
@@ -79,6 +80,12 @@ export function SecuritySection({
           After you copy a value, the clipboard is overwritten with empty text
           on this timer. Clearing is unconditional — if you copied something
           else in the meantime, that copy is lost too.
+        </p>
+        <p className="text-muted-foreground text-xs leading-relaxed">
+          Note: Chrome's alarm API has a {CHROME_ALARMS_MIN_SECONDS}-second
+          minimum in production builds, so values below{' '}
+          {CHROME_ALARMS_MIN_SECONDS}s are clamped up to{' '}
+          {CHROME_ALARMS_MIN_SECONDS}s.
         </p>
       </div>
 

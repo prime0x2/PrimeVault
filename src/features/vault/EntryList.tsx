@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import type { ClipboardClearSeconds } from '../../storage/prefs';
 import type { Entry } from '../../storage/schema';
 import { EntryRow } from './EntryRow';
 
@@ -8,7 +9,7 @@ interface EntryListProps {
   /** True when an active search filter has reduced the list to zero rows. */
   filtered?: boolean;
   /** From prefs; passed through to each row for the post-copy timer. */
-  clipboardClearSeconds: number;
+  clipboardClearSeconds: ClipboardClearSeconds;
 }
 
 export function EntryList({

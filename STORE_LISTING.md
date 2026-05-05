@@ -77,11 +77,11 @@ To run the auto-lock timer (which wipes the in-memory encryption key after a con
 
 ### `offscreen`
 
-To overwrite the clipboard with empty text after the configured auto-clear timeout. Service workers cannot access clipboard APIs directly, so we use a transient offscreen document. The document is created with `reasons: ['CLIPBOARD']` and closed immediately after the clear.
+Required to run the clipboard-clear step. Manifest V3 service workers cannot use clipboard APIs, so when the auto-clear timer fires PrimeVault opens a transient offscreen document with `reasons: ['CLIPBOARD']` and the justification "Clear clipboard after the configured PrimeVault auto-clear timeout," writes empty text to the clipboard, then closes the document. The offscreen document has no UI, no network access, and is opened only for this single operation.
 
 ### `clipboardWrite`
 
-Required because the offscreen document's clipboard write is not in a user-gesture context, even though it is performing the clear that the user opted in to via Settings.
+Required to overwrite the user's clipboard with empty text after the user-configured auto-clear timeout, since the offscreen document running this overwrite cannot rely on a user gesture. PrimeVault never reads the clipboard — it only writes empty text on the timer the user set in Settings.
 
 ### Host permission justification
 

@@ -128,3 +128,22 @@ export async function writePrefs(
 export function autoLockMinutesToMs(minutes: AutoLockMinutes): number {
   return minutes * 60 * 1000;
 }
+
+/**
+ * Chrome's `chrome.alarms` API floors any non-dev alarm to ~30 seconds.
+ * Anything we schedule below this fires at 30s anyway.
+ */
+export const CHROME_ALARMS_MIN_SECONDS = 30;
+
+/**
+ * The clipboard-clear delay the user actually experiences, accounting for
+ * Chrome's alarm-API floor. `0` (Never) is preserved; otherwise the value is
+ * clamped up to {@link CHROME_ALARMS_MIN_SECONDS}. Used for honest UI copy
+ * so the popup never promises a clear faster than Chrome will deliver it.
+ */
+export function effectiveClipboardClearSeconds(
+  seconds: ClipboardClearSeconds,
+): number {
+  if (seconds === 0) return 0;
+  return Math.max(seconds, CHROME_ALARMS_MIN_SECONDS);
+}
