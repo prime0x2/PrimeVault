@@ -52,7 +52,8 @@
         "noExplicitAny": "warn"
       },
       "correctness": {
-        "useExhaustiveDependencies": "warn"
+        "useExhaustiveDependencies": "error",
+        "useHookAtTopLevel": "error"
       }
     }
   },

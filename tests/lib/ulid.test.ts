@@ -38,7 +38,12 @@ describe('ulid', () => {
     const fixedNow = () => 1700000000000;
     const ids = Array.from({ length: 50 }, () => ulid(fixedNow));
     for (let i = 1; i < ids.length; i++) {
-      expect(ids[i] > (ids[i - 1] as string)).toBe(true);
+      const prev = ids[i - 1];
+      const curr = ids[i];
+      if (prev === undefined || curr === undefined) {
+        throw new Error('test setup: ids should be defined');
+      }
+      expect(curr > prev).toBe(true);
     }
   });
 

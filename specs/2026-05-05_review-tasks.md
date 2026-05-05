@@ -57,9 +57,9 @@ Reviewer flagged the coverage config as "measuring 1/4 of the codebase" and the 
 
 The reviewer called `noUncheckedIndexedAccess` "the single biggest win you can get in TS strictness."
 
-- [ ] **P3.1** Enable `noUncheckedIndexedAccess` in `tsconfig.json` and fix the resulting narrowings (e.g. `session.ts:358` `as Entry` after `findIndex`). (Review §6, nice-to-have #1.)
-- [ ] **P3.2** Enable `exactOptionalPropertyTypes` and fix fallout. Lower priority than P3.1. (Review §6.)
-- [ ] **P3.3** Audit React hooks rules — Biome's `useExhaustiveDependencies` is `'warn'`; do a one-pass pass and either escalate to `'error'` or document the exceptions. (Review §6.)
+- [x] **P3.1** Enable `noUncheckedIndexedAccess` in `tsconfig.json` and fix the resulting narrowings (e.g. `session.ts:358` `as Entry` after `findIndex`). (Review §6, nice-to-have #1.)
+- [x] **P3.2** Enable `exactOptionalPropertyTypes` and fix fallout. Lower priority than P3.1. (Review §6.)
+- [x] **P3.3** Audit React hooks rules — Biome's `useExhaustiveDependencies` is `'warn'`; do a one-pass pass and either escalate to `'error'` or document the exceptions. (Review §6.)
 
 ---
 

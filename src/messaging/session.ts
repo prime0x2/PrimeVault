@@ -340,7 +340,8 @@ export function createSession(deps: SessionDeps): Session {
   async function updateEntry(id: string, input: EntryInput): Promise<Entry> {
     const { envelope, plaintext } = await readPlaintext();
     const idx = plaintext.entries.findIndex((e) => e.id === id);
-    if (idx === -1) {
+    const existing = idx === -1 ? undefined : plaintext.entries[idx];
+    if (existing === undefined) {
       throw new MessagingError('notFound', `Entry ${id} not found`);
     }
 
@@ -355,7 +356,6 @@ export function createSession(deps: SessionDeps): Session {
       );
     }
 
-    const existing = plaintext.entries[idx] as Entry;
     const ts = nowIso();
     // Build the updated entry. Optional fields use the input value; null
     // means "clear it"; undefined means "preserve existing".
@@ -406,11 +406,11 @@ export function createSession(deps: SessionDeps): Session {
   async function markUsed(id: string): Promise<Entry> {
     const { envelope, plaintext } = await readPlaintext();
     const idx = plaintext.entries.findIndex((e) => e.id === id);
-    if (idx === -1) {
+    const target = idx === -1 ? undefined : plaintext.entries[idx];
+    if (target === undefined) {
       throw new MessagingError('notFound', `Entry ${id} not found`);
     }
     const ts = nowIso();
-    const target = plaintext.entries[idx] as Entry;
     const updated: Entry = {
       ...target,
       lastUsedAt: ts,
