@@ -8,6 +8,12 @@ importers:
 
   .:
     dependencies:
+      '@fontsource/geist-mono':
+        specifier: ^5.2.7
+        version: 5.2.7
+      '@fontsource/geist-sans':
+        specifier: ^5.2.5
+        version: 5.2.5
       '@zxcvbn-ts/core':
         specifier: ^3.0.4
         version: 3.0.4
@@ -17,9 +23,6 @@ importers:
       '@zxcvbn-ts/language-en':
         specifier: ^3.0.2
         version: 3.0.2
-      class-variance-authority:
-        specifier: ^0.7.1
-        version: 0.7.1
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -360,6 +363,12 @@ packages:
     engines: {node: '>=18'}
     cpu: [x64]
     os: [win32]
+
+  '@fontsource/geist-mono@5.2.7':
+    resolution: {integrity: sha512-xVPVFISJg/K0VVd+aQN0Y7X/sw9hUcJPyDWFJ5GpyU3bHELhoRsJkPSRSHXW32mOi0xZCUQDOaPj1sqIFJ1FGg==}
+
+  '@fontsource/geist-sans@5.2.5':
+    resolution: {integrity: sha512-anllOHyJbElRs9fV15TeDRqAeb1IKm4bSknPl6ZMoyPTx1BBy7logudcUwpNjmQLkzn4Q0JGQLRCUKJYoyST6A==}
 
   '@jridgewell/gen-mapping@0.3.13':
     resolution: {integrity: sha512-2kkt/7niJ6MgEPxF0bYdQ6etZaA+fQvDcLKckhy1yIQOzaoKjBBjSj63/aLVjYE3qhRt5dvM+uUyfCg6UKCBbA==}
@@ -882,9 +891,6 @@ packages:
 
   citty@0.2.2:
     resolution: {integrity: sha512-+6vJA3L98yv+IdfKGZHBNiGW5KHn22e/JwID0Strsz8h4S/csAu/OuICwxrg44k5MRiZHWIo8XXuJgQTriRP4w==}
-
-  class-variance-authority@0.7.1:
-    resolution: {integrity: sha512-Ka+9Trutv7G8M6WT6SeiRWz792K5qEqIGEGzXKhAE6xOWAY6pPH8U+9IY3oCMv6kqTmLsv7Xh/2w2RigkePMsg==}
 
   cli-boxes@3.0.0:
     resolution: {integrity: sha512-/lzGpEWL/8PfI0BmBOPRwp0c/wFNX1RdUML3jK/RcSBA9T8mZDdQpqYBKtCFTOfQbwPqWEOpjqW+Fnayc0969g==}
@@ -2391,6 +2397,10 @@ snapshots:
   '@esbuild/win32-x64@0.27.7':
     optional: true
 
+  '@fontsource/geist-mono@5.2.7': {}
+
+  '@fontsource/geist-sans@5.2.5': {}
+
   '@jridgewell/gen-mapping@0.3.13':
     dependencies:
       '@jridgewell/sourcemap-codec': 1.5.5
@@ -2847,10 +2857,6 @@ snapshots:
   ci-info@4.4.0: {}
 
   citty@0.2.2: {}
-
-  class-variance-authority@0.7.1:
-    dependencies:
-      clsx: 2.1.1
 
   cli-boxes@3.0.0: {}
 

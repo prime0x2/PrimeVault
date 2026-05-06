@@ -29,10 +29,11 @@
     "postinstall": "wxt prepare && node -e \"require('node:fs').mkdirSync('.wxt/chrome-data',{recursive:true})\""
   },
   "dependencies": {
+    "@fontsource/geist-mono": "^5.2.7",
+    "@fontsource/geist-sans": "^5.2.5",
     "@zxcvbn-ts/core": "^3.0.4",
     "@zxcvbn-ts/language-common": "^3.0.4",
     "@zxcvbn-ts/language-en": "^3.0.2",
-    "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^1.14.0",
     "react": "^19.2.4",

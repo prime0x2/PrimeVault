@@ -1,7 +1,11 @@
 import { useEffect, useId, useRef, useState } from 'react';
-import { Button } from '../../components/ui/button';
-import { Input } from '../../components/ui/input';
-import { Label } from '../../components/ui/label';
+import {
+  BrandHeader,
+  PopupFooter,
+  PopupShell,
+  PrimaryButton,
+  TerminalInput,
+} from '../../components/terminal';
 import { popupClient } from '../../messaging/popup-client';
 import { MessagingError, type VaultStatus } from '../../messaging/protocol';
 import { StrengthMeter } from '../passwords/StrengthMeter';
@@ -35,6 +39,7 @@ interface OnboardingProps {
 export function Onboarding({ onCreated }: OnboardingProps): React.ReactElement {
   const passwordId = useId();
   const confirmId = useId();
+  const meterId = `${passwordId}-meter`;
 
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
@@ -102,73 +107,106 @@ export function Onboarding({ onCreated }: OnboardingProps): React.ReactElement {
   }
 
   return (
-    <form
-      onSubmit={onSubmit}
-      className="flex flex-1 flex-col gap-4 px-6 py-5"
-      aria-label="Create your master password"
+    <PopupShell
+      header={<BrandHeader status="setup" />}
+      footer={
+        <PopupFooter>
+          <span>local-only · zero-knowledge</span>
+          <span>v1.0.0</span>
+        </PopupFooter>
+      }
     >
-      <header className="flex flex-col gap-1">
-        <h1 className="font-semibold text-xl tracking-tight">
-          Create your vault
+      <form
+        onSubmit={onSubmit}
+        className="flex flex-1 flex-col px-[22px] pt-6 pb-[18px]"
+        aria-label="Create your master password"
+      >
+        <div className="mb-2.5 font-mono text-[11px] text-text-muted">
+          <span className="text-accent">›</span> init vault
+        </div>
+        <h1 className="mb-2.5 font-semibold text-[26px] leading-[1.15] tracking-[-0.025em]">
+          Set your <span style={{ color: 'var(--accent)' }}>master key</span>.
         </h1>
-        <p className="text-muted-foreground text-sm leading-snug">
-          Pick a strong master password. It unlocks your vault and{' '}
-          <strong className="text-foreground">cannot be recovered</strong> if
-          you lose it.
+        <p className="mb-[22px] max-w-[320px] text-[13px] text-text-dim leading-[1.55]">
+          It unlocks everything. There is no recovery — only this device, only
+          this key.
         </p>
-      </header>
 
-      <div className="flex flex-col gap-2">
-        <Label htmlFor={passwordId}>Master password</Label>
-        <Input
-          id={passwordId}
-          type="password"
-          autoComplete="new-password"
-          autoFocus
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          aria-describedby={`${passwordId}-meter`}
-        />
-        <StrengthMeter
-          id={`${passwordId}-meter`}
-          length={password.length}
-          score={scoreState.score}
-          crackTime={scoreState.crackTime}
-          warning={scoreState.warning}
-        />
-      </div>
+        <div className="mb-3.5">
+          <div className="mb-2 flex justify-between font-mono text-[11px]">
+            <label htmlFor={passwordId} className="text-text-dim">
+              master_password
+            </label>
+            <span aria-hidden className="text-text-muted">
+              required
+            </span>
+          </div>
+          <TerminalInput
+            id={passwordId}
+            type="password"
+            autoComplete="new-password"
+            autoFocus
+            spacedValue={password.length > 0}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            aria-describedby={meterId}
+          />
+          <div className="mt-2">
+            <StrengthMeter
+              id={meterId}
+              length={password.length}
+              score={scoreState.score}
+              crackTime={scoreState.crackTime}
+              warning={scoreState.warning}
+            />
+          </div>
+        </div>
 
-      <div className="flex flex-col gap-2">
-        <Label htmlFor={confirmId}>Confirm password</Label>
-        <Input
-          id={confirmId}
-          type="password"
-          autoComplete="new-password"
-          value={confirm}
-          onChange={(e) => setConfirm(e.target.value)}
-        />
-        {confirm.length > 0 && confirm !== password && (
-          <p className="text-destructive text-xs">Passwords don't match.</p>
+        <div>
+          <div className="mb-2 font-mono text-[11px] text-text-dim">
+            <label htmlFor={confirmId}>confirm</label>
+          </div>
+          <TerminalInput
+            id={confirmId}
+            type="password"
+            autoComplete="new-password"
+            spacedValue={confirm.length > 0}
+            value={confirm}
+            onChange={(e) => setConfirm(e.target.value)}
+          />
+          {confirm.length > 0 && confirm !== password && (
+            <p
+              className="mt-1.5 font-mono text-[10.5px]"
+              style={{ color: 'var(--danger)' }}
+            >
+              passwords do not match
+            </p>
+          )}
+        </div>
+
+        {submitError && (
+          <p
+            role="alert"
+            className="mt-3 rounded-md border px-3 py-2 font-mono text-[11px]"
+            style={{
+              color: 'var(--danger)',
+              borderColor: 'var(--danger-border)',
+              background: 'var(--danger-soft)',
+            }}
+          >
+            {submitError}
+          </p>
         )}
-      </div>
 
-      {submitError && (
-        <p
-          role="alert"
-          className="rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-destructive text-xs"
-        >
-          {submitError}
-        </p>
-      )}
+        <div className="flex-1" />
 
-      <div className="mt-auto flex flex-col gap-2">
-        <Button type="submit" disabled={!validation.ok || submitting}>
-          {submitting ? 'Creating vault…' : 'Create vault'}
-        </Button>
-        <p className="text-center text-[11px] text-muted-foreground">
-          Your password never leaves this device.
+        <PrimaryButton type="submit" disabled={!validation.ok || submitting}>
+          {submitting ? 'creating vault…' : 'Create vault'}
+        </PrimaryButton>
+        <p className="mt-2.5 text-center font-mono text-[10.5px] text-text-muted">
+          password.never_leaves(this.device)
         </p>
-      </div>
-    </form>
+      </form>
+    </PopupShell>
   );
 }
