@@ -1,13 +1,13 @@
-import { Search, X } from 'lucide-react';
 import { useEffect, useRef } from 'react';
-import { Input } from '../../components/ui/input';
+import { Kbd } from '../../components/terminal';
+import { cn } from '../../lib/cn';
 
 interface SearchBarProps {
   value: string;
   onChange: (next: string) => void;
   count: number;
   total: number;
-  /** Focus the input on mount. Used when route enters the vault screen. */
+  /** Focus the input on mount. */
   autoFocus?: boolean;
 }
 
@@ -31,43 +31,65 @@ export function SearchBar({
     }
   }
 
-  // When filtering, show "n / total"; otherwise just the total.
   const filtered = value.trim() !== '';
   const display = filtered ? `${count} / ${total}` : `${total}`;
 
   return (
-    <div className="flex h-9 shrink-0 items-center gap-2 border-b px-3">
-      <Search
-        className="h-3.5 w-3.5 shrink-0 text-muted-foreground"
-        aria-hidden="true"
-      />
-      <Input
-        ref={inputRef}
-        type="text"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        onKeyDown={onKeyDown}
-        placeholder="Search by name or tag…"
-        aria-label="Search entries"
-        className="h-7 flex-1 border-0 bg-transparent px-0 text-sm shadow-none focus-visible:ring-0"
-      />
-      {value !== '' && (
-        <button
-          type="button"
-          onClick={() => onChange('')}
-          aria-label="Clear search"
-          title="Clear (Esc)"
-          className="rounded p-0.5 text-muted-foreground hover:text-foreground"
-        >
-          <X className="h-3.5 w-3.5" />
-        </button>
-      )}
-      <span
-        role="status"
-        className="rounded bg-muted px-1.5 py-0.5 text-[10px] text-muted-foreground tabular-nums"
+    <div className="px-[14px] pt-2 pb-3">
+      <div
+        className={cn(
+          'flex h-[42px] items-center rounded-[10px] border bg-bg-elev px-3 transition-all',
+          filtered
+            ? 'border-border-accent shadow-[0_0_0_4px_var(--accent-soft)]'
+            : 'border-border-strong',
+        )}
       >
-        {display}
-      </span>
+        <span
+          className="mr-2.5 select-none font-mono text-[14px] text-accent"
+          aria-hidden
+        >
+          ›
+        </span>
+        <input
+          ref={inputRef}
+          type="text"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          onKeyDown={onKeyDown}
+          placeholder="search secrets…"
+          aria-label="Search entries"
+          autoComplete="off"
+          spellCheck={false}
+          className="flex-1 border-0 bg-transparent font-mono text-[13px] text-text outline-none placeholder:text-text-muted"
+        />
+        {value !== '' ? (
+          <button
+            type="button"
+            onClick={() => onChange('')}
+            aria-label="Clear search"
+            title="Clear (Esc)"
+            className="inline-flex h-[18px] w-[18px] items-center justify-center rounded text-text-dim hover:text-text"
+          >
+            <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
+              <path
+                d="M2 2l7 7M9 2l-7 7"
+                stroke="currentColor"
+                strokeWidth="1.4"
+                strokeLinecap="round"
+              />
+            </svg>
+          </button>
+        ) : (
+          <Kbd>⌘/</Kbd>
+        )}
+        <span
+          role="status"
+          aria-label="Result count"
+          className="ml-2 select-none font-mono text-[10px] text-text-muted tabular-nums"
+        >
+          {display}
+        </span>
+      </div>
     </div>
   );
 }

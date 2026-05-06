@@ -1,10 +1,6 @@
-import { ChevronDown, ChevronUp } from 'lucide-react';
 import { useId, useState } from 'react';
-import { Button } from '../../components/ui/button';
-import { Input } from '../../components/ui/input';
-import { Label } from '../../components/ui/label';
-import { Select } from '../../components/ui/select';
-import { Textarea } from '../../components/ui/textarea';
+import { GhostButton, TerminalInput } from '../../components/terminal';
+import { cn } from '../../lib/cn';
 import { popupClient } from '../../messaging/popup-client';
 import { type EntryInput, MessagingError } from '../../messaging/protocol';
 import { ENTRY_KINDS, type Entry, type EntryKind } from '../../storage/schema';
@@ -18,11 +14,11 @@ interface EntryFormProps {
 }
 
 const KIND_LABELS: Record<EntryKind, string> = {
-  api_key: 'API key',
-  token: 'Token',
-  password: 'Password',
-  secret: 'Secret',
-  other: 'Other',
+  api_key: 'api_key',
+  token: 'token',
+  password: 'password',
+  secret: 'secret',
+  other: 'other',
 };
 
 export function EntryForm({
@@ -34,7 +30,6 @@ export function EntryForm({
   const nameId = useId();
   const valueId = useId();
   const notesId = useId();
-  const kindId = useId();
   const expiresId = useId();
 
   const [name, setName] = useState(entry?.name ?? '');
@@ -43,16 +38,6 @@ export function EntryForm({
   const [tags, setTags] = useState<string[]>(entry?.tags ?? []);
   const [kind, setKind] = useState<EntryKind>(entry?.kind ?? 'secret');
   const [expiresAt, setExpiresAt] = useState(entry?.expiresAt ?? '');
-  // Auto-expand "more fields" when editing an entry that already has any of
-  // the extended fields populated.
-  const [showMore, setShowMore] = useState(
-    Boolean(
-      entry?.notes ||
-        (entry?.tags && entry.tags.length > 0) ||
-        entry?.expiresAt ||
-        (entry?.kind !== undefined && entry.kind !== 'secret'),
-    ),
-  );
 
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -100,132 +85,146 @@ export function EntryForm({
   return (
     <form
       onSubmit={onSubmit}
-      className="flex flex-col gap-3"
+      className="flex flex-col gap-2.5"
       aria-label={editing ? `Edit ${entry?.name}` : 'Add a new entry'}
     >
-      <div className="flex flex-col gap-1.5">
-        <Label htmlFor={nameId} className="text-xs">
-          Name
-        </Label>
-        <Input
+      {/* Name */}
+      <div>
+        <div className="mb-1.5 flex items-center justify-between font-mono text-[10.5px]">
+          <label htmlFor={nameId} className="text-text-dim">
+            name
+          </label>
+          <span style={{ color: 'var(--accent)' }}>required</span>
+        </div>
+        <TerminalInput
           id={nameId}
           autoFocus={!editing}
           value={name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="e.g. GitHub PAT"
+          placeholder="STRIPE_SECRET_KEY"
           maxLength={80}
           autoComplete="off"
           spellCheck={false}
         />
       </div>
 
-      <div className="flex flex-col gap-1.5">
-        <Label htmlFor={valueId} className="text-xs">
-          Value
-        </Label>
-        <Input
+      {/* Value */}
+      <div>
+        <div className="mb-1.5 flex items-center justify-between font-mono text-[10.5px]">
+          <label htmlFor={valueId} className="text-text-dim">
+            value
+          </label>
+          <span style={{ color: 'var(--accent)' }}>required</span>
+        </div>
+        <TerminalInput
           id={valueId}
           type="password"
           value={value}
           onChange={(e) => setValue(e.target.value)}
-          placeholder="The secret"
+          placeholder="the secret"
           maxLength={8192}
           autoComplete="off"
           spellCheck={false}
         />
       </div>
 
-      <button
-        type="button"
-        onClick={() => setShowMore((s) => !s)}
-        className="flex items-center gap-1 self-start text-muted-foreground text-xs hover:text-foreground"
-      >
-        {showMore ? (
-          <ChevronUp className="h-3 w-3" />
-        ) : (
-          <ChevronDown className="h-3 w-3" />
-        )}
-        {showMore ? 'Fewer fields' : 'More fields'}
-      </button>
-
-      {showMore && (
-        <div className="flex flex-col gap-3 border-l-2 border-border/50 pl-3">
-          <div className="flex flex-col gap-1.5">
-            <Label htmlFor={notesId} className="text-xs">
-              Notes
-            </Label>
-            <Textarea
-              id={notesId}
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              placeholder="Optional context"
-              maxLength={2000}
-              rows={2}
-            />
-          </div>
-
-          <div className="flex flex-col gap-1.5">
-            <Label className="text-xs">Tags</Label>
-            <TagInput value={tags} onChange={setTags} ariaLabel="Add tags" />
-          </div>
-
-          <div className="grid grid-cols-2 gap-2">
-            <div className="flex flex-col gap-1.5">
-              <Label htmlFor={kindId} className="text-xs">
-                Kind
-              </Label>
-              <Select
-                id={kindId}
-                value={kind}
-                onChange={(e) => setKind(e.target.value as EntryKind)}
+      {/* Kind chips */}
+      <div>
+        <div className="mb-1.5 font-mono text-[10.5px] text-text-dim">kind</div>
+        <div className="flex flex-wrap gap-1">
+          {ENTRY_KINDS.map((k) => {
+            const selected = kind === k;
+            return (
+              <button
+                key={k}
+                type="button"
+                onClick={() => setKind(k)}
+                className={cn(
+                  'rounded-[6px] border px-2.5 py-1.5 font-mono text-[11px] transition-colors',
+                  selected
+                    ? 'border-border-accent bg-accent-soft text-text'
+                    : 'border-border-default bg-transparent text-text-dim hover:border-border-strong hover:text-text',
+                )}
               >
-                {ENTRY_KINDS.map((k) => (
-                  <option key={k} value={k}>
-                    {KIND_LABELS[k]}
-                  </option>
-                ))}
-              </Select>
-            </div>
-            <div className="flex flex-col gap-1.5">
-              <Label htmlFor={expiresId} className="text-xs">
-                Expires
-              </Label>
-              <Input
-                id={expiresId}
-                type="date"
-                value={expiresAt}
-                onChange={(e) => setExpiresAt(e.target.value)}
-              />
-            </div>
-          </div>
+                {KIND_LABELS[k]}
+              </button>
+            );
+          })}
         </div>
-      )}
+      </div>
+
+      {/* Expires */}
+      <div>
+        <div className="mb-1.5 font-mono text-[10.5px] text-text-dim">
+          <label htmlFor={expiresId}>expires</label>
+        </div>
+        <input
+          id={expiresId}
+          type="date"
+          value={expiresAt}
+          onChange={(e) => setExpiresAt(e.target.value)}
+          className="h-10 w-full rounded-[10px] border border-border-default bg-bg-input px-3 font-mono text-[12.5px] text-text outline-none focus:border-border-accent focus:shadow-[0_0_0_4px_var(--accent-soft)]"
+        />
+      </div>
+
+      {/* Tags — full width */}
+      <div>
+        <div className="mb-1.5 font-mono text-[10.5px] text-text-dim">
+          tags <span className="text-text-muted">· optional</span>
+        </div>
+        <TagInput value={tags} onChange={setTags} ariaLabel="Add tags" />
+      </div>
+
+      {/* Notes */}
+      <div>
+        <div className="mb-1.5 flex items-center justify-between font-mono text-[10.5px]">
+          <label htmlFor={notesId} className="text-text-dim">
+            note
+          </label>
+          <span className="text-text-muted">optional</span>
+        </div>
+        <textarea
+          id={notesId}
+          value={notes}
+          onChange={(e) => setNotes(e.target.value)}
+          placeholder="rotated, owner, anything that helps future-you"
+          maxLength={2000}
+          rows={2}
+          className="min-h-11 w-full resize-y rounded-[10px] border border-border-default bg-bg-input px-3 py-2.5 font-mono text-[11.5px] text-text leading-[1.5] outline-none placeholder:text-text-muted focus:border-border-accent focus:shadow-[0_0_0_4px_var(--accent-soft)]"
+        />
+      </div>
 
       {error && (
-        <p role="alert" className="text-destructive text-xs">
+        <p
+          role="alert"
+          className="font-mono text-[10.5px]"
+          style={{ color: 'var(--danger)' }}
+        >
           {error}
         </p>
       )}
 
-      <div className="flex gap-2">
-        <Button
+      <div className="flex gap-2 pt-1">
+        <GhostButton
           type="button"
-          variant="ghost"
-          size="sm"
           onClick={onCancel}
           disabled={saving}
-          className="flex-1"
+          className="h-10 flex-1 rounded-[10px]"
         >
           Cancel
-        </Button>
-        <Button
+        </GhostButton>
+        <button
           type="submit"
-          size="sm"
           disabled={!canSubmit}
-          className="flex-1"
+          className={cn(
+            'inline-flex h-10 flex-[2] items-center justify-center rounded-[10px] font-sans font-semibold text-[13px] transition-colors',
+            canSubmit
+              ? 'bg-accent text-bg shadow-[0_4px_16px_-8px_var(--accent)] hover:brightness-110'
+              : 'cursor-not-allowed border border-border-default bg-bg-elev text-text-dim',
+          )}
         >
           {saving ? 'Saving…' : editing ? 'Save changes' : 'Save'}
-        </Button>
+        </button>
       </div>
     </form>
   );

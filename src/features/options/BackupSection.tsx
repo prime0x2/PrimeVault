@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button } from '../../components/ui/button';
+import { Button } from '../../components/form';
 import { ExportEncryptedForm } from './ExportEncryptedForm';
 import { ExportPlaintextForm } from './ExportPlaintextForm';
 import { ImportEncryptedForm } from './ImportEncryptedForm';
@@ -15,14 +15,18 @@ export function BackupSection(): React.ReactElement {
   }
 
   return (
-    <section className="flex flex-col gap-4 border-t pt-6">
-      <h2 className="font-semibold text-base tracking-tight">Backup</h2>
+    <section className="flex flex-col gap-5 border-t border-border-default pt-6">
+      <h2 className="font-mono text-[10.5px] text-text-muted tracking-[0.18em] uppercase">
+        Backup
+      </h2>
 
       <div className="flex flex-col gap-3">
         <div className="flex items-start justify-between gap-3">
           <div>
-            <h3 className="font-medium text-sm">Export encrypted backup</h3>
-            <p className="text-muted-foreground text-xs leading-relaxed">
+            <h3 className="font-medium text-[13px] text-text">
+              Export encrypted backup
+            </h3>
+            <p className="text-[12px] text-text-dim leading-relaxed">
               Downloads your encrypted vault as a JSON file. Decryptable only
               with your master password.
             </p>
@@ -43,11 +47,13 @@ export function BackupSection(): React.ReactElement {
         )}
       </div>
 
-      <div className="flex flex-col gap-3 border-t pt-4">
+      <div className="flex flex-col gap-3 border-t border-border-default pt-4">
         <div className="flex items-start justify-between gap-3">
           <div>
-            <h3 className="font-medium text-sm">Import encrypted backup</h3>
-            <p className="text-muted-foreground text-xs leading-relaxed">
+            <h3 className="font-medium text-[13px] text-text">
+              Import encrypted backup
+            </h3>
+            <p className="text-[12px] text-text-dim leading-relaxed">
               Replaces the current vault with a previously exported backup file.
               You'll need the password the file was exported with.
             </p>
@@ -68,13 +74,16 @@ export function BackupSection(): React.ReactElement {
         )}
       </div>
 
-      <div className="flex flex-col gap-3 border-t pt-4">
+      <div className="flex flex-col gap-3 border-t border-border-default pt-4">
         <div className="flex items-start justify-between gap-3">
           <div>
-            <h3 className="font-medium text-destructive text-sm">
+            <h3
+              className="font-medium text-[13px]"
+              style={{ color: 'var(--danger)' }}
+            >
               Export plaintext (advanced)
             </h3>
-            <p className="text-muted-foreground text-xs leading-relaxed">
+            <p className="text-[12px] text-text-dim leading-relaxed">
               Decrypts every entry and writes them to a JSON file. Use only if
               you understand the risks — the file has no password protection.
             </p>

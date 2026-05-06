@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Button } from '../../components/ui/button';
+import { GhostButton } from '../../components/terminal';
 import { Onboarding } from '../../features/unlock/Onboarding';
 import { Unlock } from '../../features/unlock/Unlock';
 import { Vault } from '../../features/vault/Vault';
@@ -66,14 +66,14 @@ export default function App(): React.ReactElement {
         <Unlock onUnlocked={(status) => setPhase({ kind: 'ready', status })} />
       );
     case 'unlocked':
-      return <Vault onLocked={refresh} />;
+      return <Vault onLocked={refresh} expiresAt={phase.status.expiresAt} />;
   }
 }
 
 function Loading(): React.ReactElement {
   return (
     <div className="flex flex-1 items-center justify-center">
-      <div className="text-muted-foreground text-xs">Loading…</div>
+      <div className="font-mono text-[11px] text-text-muted">loading…</div>
     </div>
   );
 }
@@ -88,10 +88,8 @@ function ErrorView({
   return (
     <div className="flex flex-1 flex-col items-center justify-center gap-3 px-6 text-center">
       <div className="font-medium text-sm">Something went wrong</div>
-      <p className="text-muted-foreground text-xs leading-relaxed">{message}</p>
-      <Button variant="outline" size="sm" onClick={onRetry}>
-        Try again
-      </Button>
+      <p className="text-[12px] text-text-dim leading-relaxed">{message}</p>
+      <GhostButton onClick={onRetry}>Try again</GhostButton>
     </div>
   );
 }

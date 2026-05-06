@@ -11,11 +11,13 @@ export function AppearanceSection({
   onChange,
 }: AppearanceSectionProps): React.ReactElement {
   return (
-    <section className="flex flex-col gap-4 border-t pt-6">
-      <h2 className="font-semibold text-base tracking-tight">Appearance</h2>
+    <section className="flex flex-col gap-4 border-t border-border-default pt-6">
+      <h2 className="font-mono text-[10.5px] text-text-muted tracking-[0.18em] uppercase">
+        Appearance
+      </h2>
 
       <fieldset className="flex flex-col gap-2">
-        <legend className="text-sm">Theme</legend>
+        <legend className="font-medium text-[13px] text-text">Theme</legend>
         <div className="flex gap-2">
           {THEME_OPTIONS.map((t) => (
             <ThemePill
@@ -28,9 +30,10 @@ export function AppearanceSection({
             />
           ))}
         </div>
-        <p className="text-muted-foreground text-xs leading-relaxed">
-          "System" follows your OS appearance setting. Manual overrides take
-          effect immediately on the popup and this page.
+        <p className="font-mono text-[11px] text-text-muted leading-relaxed">
+          Direction B (Terminal) is dark-only for v0.1 — light and system both
+          render the same dark surface. A native light theme will land with
+          v0.2.
         </p>
       </fieldset>
     </section>
@@ -48,18 +51,14 @@ function ThemePill({
   selected,
   onSelect,
 }: ThemePillProps): React.ReactElement {
-  // Hidden radio + styled label: gets us native radio-group keyboard
-  // semantics (arrow keys, single-tab-stop) for free, while letting the
-  // label own the visual styling. `peer` Tailwind classes target sibling
-  // states so we can swap the label appearance based on `:checked`.
   return (
     <label
       className={cn(
-        'cursor-pointer rounded-md border px-3 py-1.5 text-sm capitalize shadow-sm transition-colors',
-        'has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring',
+        'cursor-pointer rounded-[8px] border px-3 py-1.5 font-mono text-[12px] capitalize transition-colors',
+        'has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-accent',
         selected
-          ? 'border-foreground bg-foreground text-background'
-          : 'border-input bg-background hover:bg-muted',
+          ? 'border-border-accent bg-accent-soft text-text'
+          : 'border-border-default bg-transparent text-text-dim hover:border-border-strong hover:text-text',
       )}
     >
       <input

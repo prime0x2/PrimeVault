@@ -1,8 +1,9 @@
-/**
- * Visual strength meter for a password input. Used by both the onboarding
- * screen (creating the master password) and the change-password screen in
- * Settings. The component is purely presentational — it consumes a score
- * and surface text from a parent that owns the debounced zxcvbn call.
+/*
+ * Visual strength meter for a password input.
+ *
+ * Direction B: continuous entropy bar (gradient deep→accent), filled to a
+ * percentage based on score. Mono caption + small mono percent badge above
+ * the bar. Used by onboarding + change-password.
  */
 
 import { cn } from '../../lib/cn';
@@ -19,22 +20,20 @@ export interface StrengthMeterProps {
 }
 
 const SCORE_LABELS: Record<StrengthScore, string> = {
-  0: 'Very weak',
-  1: 'Weak',
-  2: 'Fair',
-  3: 'Strong',
-  4: 'Very strong',
+  0: 'very weak',
+  1: 'weak',
+  2: 'fair',
+  3: 'strong',
+  4: 'very strong',
 };
 
-const SCORE_BAR_CLASS: Record<StrengthScore, string> = {
-  0: 'bg-destructive',
-  1: 'bg-destructive',
-  2: 'bg-yellow-500 dark:bg-yellow-400',
-  3: 'bg-emerald-500 dark:bg-emerald-400',
-  4: 'bg-emerald-500 dark:bg-emerald-400',
+const SCORE_PERCENT: Record<StrengthScore, number> = {
+  0: 12,
+  1: 32,
+  2: 56,
+  3: 78,
+  4: 92,
 };
-
-const BAR_IDS = ['b1', 'b2', 'b3', 'b4', 'b5'] as const;
 
 export function StrengthMeter({
   id,
@@ -43,47 +42,69 @@ export function StrengthMeter({
   crackTime,
   warning,
 }: StrengthMeterProps): React.ReactElement {
-  const filled = score === null ? 0 : score + 1;
-  const labelText =
+  const tooShort = length > 0 && length < MIN_PASSWORD_LENGTH;
+  const pct = score === null ? 0 : SCORE_PERCENT[score];
+
+  const captionLeft =
     length === 0
-      ? `Use at least ${MIN_PASSWORD_LENGTH} characters`
-      : length < MIN_PASSWORD_LENGTH
-        ? `${MIN_PASSWORD_LENGTH - length} more character${
-            MIN_PASSWORD_LENGTH - length === 1 ? '' : 's'
-          } to go`
+      ? `min ${MIN_PASSWORD_LENGTH} chars`
+      : tooShort
+        ? `${MIN_PASSWORD_LENGTH - length} more to go`
         : score === null
-          ? 'Checking strength…'
-          : `${SCORE_LABELS[score]} • crack time ${crackTime}`;
+          ? 'evaluating…'
+          : SCORE_LABELS[score];
+
+  const captionRight =
+    score === null || tooShort || length === 0 ? '' : `crack ${crackTime}`;
+
+  const accent =
+    score === null
+      ? 'var(--text-muted)'
+      : score >= 3
+        ? 'var(--accent)'
+        : score === 2
+          ? 'var(--warn)'
+          : 'var(--danger)';
 
   return (
-    <div id={id} className="flex flex-col gap-1.5" aria-live="polite">
+    <div id={id} className="flex flex-col gap-2" aria-live="polite">
+      <div className="flex items-center justify-between font-mono text-[10.5px]">
+        <span className="text-text-dim">{captionLeft}</span>
+        <span style={{ color: accent }}>
+          {score === null ? '—' : `${SCORE_LABELS[score]} · ${pct}%`}
+        </span>
+      </div>
       <div
-        className="flex h-1.5 gap-1"
+        className="relative h-1 overflow-hidden rounded-[2px] bg-bg-elev"
         role="progressbar"
         aria-valuemin={0}
-        aria-valuemax={5}
-        aria-valuenow={filled}
+        aria-valuemax={100}
+        aria-valuenow={pct}
         aria-label="Password strength"
       >
-        {BAR_IDS.map((barId, i) => {
-          const active = i < filled;
-          return (
-            <div
-              key={barId}
-              className={cn(
-                'flex-1 rounded-full transition-colors',
-                active && score !== null ? SCORE_BAR_CLASS[score] : 'bg-muted',
-              )}
-            />
-          );
-        })}
+        <div
+          className="absolute inset-y-0 left-0 transition-all"
+          style={{
+            width: `${pct}%`,
+            background:
+              score === null
+                ? 'var(--text-muted)'
+                : score >= 3
+                  ? 'linear-gradient(90deg, var(--accent-deep), var(--accent))'
+                  : accent,
+          }}
+        />
       </div>
-      <p className="text-muted-foreground text-xs">
-        {labelText}
-        {warning && score !== null && score < 3 && (
-          <span className="text-destructive"> — {warning}</span>
-        )}
-      </p>
+      {captionRight !== '' && (
+        <p className="font-mono text-[10.5px] text-text-muted">
+          {captionRight}
+          {warning && score !== null && score < 3 && (
+            <span className={cn('ml-1')} style={{ color: 'var(--danger)' }}>
+              · {warning}
+            </span>
+          )}
+        </p>
+      )}
     </div>
   );
 }

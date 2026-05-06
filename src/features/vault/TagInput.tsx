@@ -1,6 +1,4 @@
-import { X } from 'lucide-react';
 import { useState } from 'react';
-import { Input } from '../../components/ui/input';
 import { cn } from '../../lib/cn';
 import { MAX_TAGS, normalizeTag } from '../../lib/tags';
 
@@ -16,6 +14,7 @@ export function TagInput({
   ariaLabel,
 }: TagInputProps): React.ReactElement {
   const [draft, setDraft] = useState('');
+  const [focused, setFocused] = useState(false);
   const atCap = value.length >= MAX_TAGS;
 
   function commit(): void {
@@ -47,38 +46,57 @@ export function TagInput({
   return (
     <div
       className={cn(
-        'flex min-h-9 flex-wrap items-center gap-1 rounded-md border border-input bg-background px-2 py-1 text-sm shadow-sm',
-        'focus-within:ring-2 focus-within:ring-ring',
+        'flex min-h-10 flex-wrap items-center gap-1.5 rounded-[10px] border bg-bg-input px-2 py-1.5 transition-all',
+        focused
+          ? 'border-border-accent shadow-[0_0_0_4px_var(--accent-soft)]'
+          : 'border-border-default',
       )}
     >
       {value.map((tag) => (
         <span
           key={tag}
-          className="inline-flex items-center gap-1 rounded bg-muted px-2 py-0.5 text-muted-foreground text-xs"
+          className="inline-flex items-center gap-1 rounded-[5px] border border-border-default bg-bg-elev px-2 py-0.5 font-mono text-[11px] text-text"
         >
           {tag}
           <button
             type="button"
             onClick={() => remove(tag)}
             aria-label={`Remove tag ${tag}`}
-            className="rounded-full text-muted-foreground/70 hover:text-foreground"
+            className="rounded text-text-muted hover:text-text"
           >
-            <X className="h-3 w-3" />
+            <svg width="9" height="9" viewBox="0 0 9 9" fill="none">
+              <path
+                d="M2 2l5 5M7 2l-5 5"
+                stroke="currentColor"
+                strokeWidth="1.4"
+                strokeLinecap="round"
+              />
+            </svg>
           </button>
         </span>
       ))}
-      <Input
+      <input
         value={draft}
         onChange={(e) => setDraft(e.target.value)}
         onKeyDown={onKeyDown}
-        onBlur={commit}
+        onFocus={() => setFocused(true)}
+        onBlur={() => {
+          setFocused(false);
+          commit();
+        }}
         placeholder={
-          atCap ? `Max ${MAX_TAGS} tags` : value.length === 0 ? 'Add tags…' : ''
+          atCap
+            ? `max ${MAX_TAGS} tags`
+            : value.length === 0
+              ? 'add tag'
+              : '+ add tag'
         }
         disabled={atCap}
         aria-label={ariaLabel ?? 'Add a tag'}
         maxLength={24}
-        className="h-6 min-w-20 flex-1 border-0 bg-transparent px-1 py-0 shadow-none focus-visible:ring-0"
+        autoComplete="off"
+        spellCheck={false}
+        className="min-w-20 flex-1 border-0 bg-transparent px-1 py-0.5 font-mono text-[11px] text-text outline-none placeholder:text-text-muted"
       />
     </div>
   );

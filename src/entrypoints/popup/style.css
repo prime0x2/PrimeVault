@@ -1,6 +1,20 @@
 @import "tailwindcss";
 @import "../../styles/theme.css";
 
+/* Geist webfonts (Direction B). Each weight ~12KB woff2. */
+@import "@fontsource/geist-sans/400.css";
+@import "@fontsource/geist-sans/500.css";
+@import "@fontsource/geist-sans/600.css";
+@import "@fontsource/geist-sans/700.css";
+@import "@fontsource/geist-mono/400.css";
+@import "@fontsource/geist-mono/500.css";
+
+@keyframes pv-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
 body {
   width: 380px;
   height: 560px;
