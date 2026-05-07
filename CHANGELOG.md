@@ -22,7 +22,7 @@ All notable changes to PrimeVault are documented here. The format is based on [K
 
 ---
 
-## [0.1.0] — TBD
+## [1.0.0] — TBD
 
 Initial public release.
 
@@ -30,12 +30,14 @@ Initial public release.
 
 - Zero-knowledge encrypted vault for API keys and tokens
 - Master password unlock with PBKDF2-SHA256 (600,000 iterations) + AES-256-GCM
-- Vault list with reveal, copy, edit, delete (SPEC §10)
+- Vault list with copy, edit, delete (SPEC §10)
 - Search by name (substring) and tags (exact), debounced 80ms
-- Extended fields: notes, tags (capped at 10), kind (api_key / token / password / secret / other), expiry date with urgency badges
+- Filter chips for entry kind (sorted by count, with overflow folding) and expiry urgency (`expired` / `soon`)
+- Extended fields: notes, tags (capped at 10), kind (`secret` / `api_key` / `token` / `password` / `other`), optional `scope` (personal / work), expiry date with urgency badges
 - Auto-lock with configurable idle timeout (Never / 1 / 2 / 5 / 15 / 60 min)
-- Clipboard auto-clear via offscreen document (Never / 15 / 30 / 60 s)
-- Settings page: theme (system / light / dark), accent, auto-lock, clipboard timer, change master password, reset vault
+- Clipboard auto-clear via offscreen document (Never / 30 / 60 s — 15s removed because Chrome alarms floor below 30s)
+- Settings page: theme (system / light / dark), auto-lock, clipboard timer, change master password, reset vault
+- Two-direction theme system: Direction B (Terminal, phosphor green) for dark, Direction C (Calm, ember orange) for light
 - Encrypted backup export and import; gated plaintext export
 - Keyboard shortcut: `⌘⇧K` (Mac) / `Ctrl+Shift+K` (Win/Linux)
 
@@ -48,5 +50,5 @@ Initial public release.
 - Forward-only schema migrations
 - Zero network requests; zero third-party SDKs
 
-[Unreleased]: https://github.com/prime0x2/PrimeVault/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/prime0x2/PrimeVault/releases/tag/v0.1.0
+[Unreleased]: https://github.com/prime0x2/PrimeVault/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/prime0x2/PrimeVault/releases/tag/v1.0.0

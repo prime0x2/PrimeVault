@@ -2,7 +2,7 @@
   "name": "primevault",
   "description": "Encrypted vault for API keys & tokens. Zero-knowledge, open source, lives in your toolbar.",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "license": "MIT",
   "author": "M. Prime <prime0x2@gmail.com>",

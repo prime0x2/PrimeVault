@@ -124,8 +124,8 @@ sequenceDiagram
 | Messaging client | `src/messaging/client.ts` + `popup-client.ts` | Typed `send` |
 | Clipboard auto-clear | `src/messaging/clipboard.ts` + `entrypoints/offscreen/main.ts` | DI'd over `chrome.alarms` + `chrome.offscreen` |
 | UI | `src/features/{vault,unlock,options,backup,passwords}/` | React components grouped by feature |
-| UI primitives | `src/components/ui/` | shadcn-style, not customised heavily |
-| Theme | `src/styles/theme.css` | Shared OKLCH tokens, imported by both entrypoints |
+| UI primitives | `src/components/terminal.tsx` (popup atoms) + `src/components/form.tsx` (options primitives + shared `<Alert>`) | Token-driven, no shadcn |
+| Theme | `src/styles/theme.css` | OKLCH dark palette + RGB-hex light palette, swapped via `:root.dark` / `:root.light` / `prefers-color-scheme` |
 
 ## Where decisions are recorded
 
