@@ -30,6 +30,7 @@
     "bundle-size-check": "node scripts/bundle-size.mjs",
     "build:brand": "node scripts/brand/render.mjs",
     "capture-shots": "node scripts/screenshots/capture.mjs",
+    "frame-shots": "node scripts/screenshots/frame.mjs",
     "postinstall": "wxt prepare && node -e \"require('node:fs').mkdirSync('.wxt/chrome-data',{recursive:true})\""
   },
   "dependencies": {
