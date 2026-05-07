@@ -3,7 +3,13 @@ import { GhostButton, TerminalInput } from '../../components/terminal';
 import { cn } from '../../lib/cn';
 import { popupClient } from '../../messaging/popup-client';
 import { type EntryInput, MessagingError } from '../../messaging/protocol';
-import { ENTRY_KINDS, type Entry, type EntryKind } from '../../storage/schema';
+import {
+  ENTRY_KINDS,
+  ENTRY_SCOPES,
+  type Entry,
+  type EntryKind,
+  type EntryScope,
+} from '../../storage/schema';
 import { TagInput } from './TagInput';
 
 interface EntryFormProps {
@@ -37,7 +43,17 @@ export function EntryForm({
   const [notes, setNotes] = useState(entry?.notes ?? '');
   const [tags, setTags] = useState<string[]>(entry?.tags ?? []);
   const [kind, setKind] = useState<EntryKind>(entry?.kind ?? 'secret');
+  // New entries default to 'personal'; edit mode preserves whatever was saved
+  // (including unscoped, which stays empty).
+  const [scope, setScope] = useState<EntryScope | ''>(
+    entry ? (entry.scope ?? '') : 'personal',
+  );
   const [expiresAt, setExpiresAt] = useState(entry?.expiresAt ?? '');
+  // Tags and notes collapse by default to keep Save/Cancel above the fold.
+  // In edit mode we auto-expand when the entry has either set, so the user
+  // can see what they're about to change.
+  const hasOptional = !!entry?.notes || (entry?.tags?.length ?? 0) > 0;
+  const [showMore, setShowMore] = useState(hasOptional);
 
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -52,6 +68,7 @@ export function EntryForm({
       notes: notes.trim() === '' ? (editing ? null : undefined) : notes.trim(),
       tags,
       kind,
+      scope: scope === '' ? (editing ? null : undefined) : scope,
       expiresAt: expiresAt === '' ? (editing ? null : undefined) : expiresAt,
     };
   }
@@ -153,46 +170,101 @@ export function EntryForm({
         </div>
       </div>
 
-      {/* Expires */}
-      <div>
-        <div className="mb-1.5 font-mono text-[10.5px] text-text-dim">
-          <label htmlFor={expiresId}>expires</label>
+      {/* Expires + Scope — 2-col grid per design. Always visible. */}
+      <div className="grid grid-cols-2 gap-2.5">
+        <div>
+          <div className="mb-1.5 font-mono text-[10.5px] text-text-dim">
+            <label htmlFor={expiresId}>expires</label>
+          </div>
+          <input
+            id={expiresId}
+            type="date"
+            value={expiresAt}
+            onChange={(e) => setExpiresAt(e.target.value)}
+            onClick={(e) => {
+              // Native date inputs only open the picker when the calendar
+              // indicator is clicked. showPicker() opens it from anywhere
+              // inside the field. Chrome 99+ — safe for an MV3 extension.
+              try {
+                e.currentTarget.showPicker();
+              } catch {
+                // showPicker throws if not user-activated; fall back silently.
+              }
+            }}
+            className="h-10 w-full cursor-pointer rounded-[10px] border border-border-default bg-bg-input px-3 font-mono text-[12.5px] text-text outline-none focus:border-border-accent focus:shadow-[0_0_0_4px_var(--accent-soft)]"
+          />
         </div>
-        <input
-          id={expiresId}
-          type="date"
-          value={expiresAt}
-          onChange={(e) => setExpiresAt(e.target.value)}
-          className="h-10 w-full rounded-[10px] border border-border-default bg-bg-input px-3 font-mono text-[12.5px] text-text outline-none focus:border-border-accent focus:shadow-[0_0_0_4px_var(--accent-soft)]"
-        />
+        <div>
+          <div className="mb-1.5 font-mono text-[10.5px] text-text-dim">
+            scope
+          </div>
+          <fieldset
+            aria-label="scope"
+            className="flex h-10 min-w-0 rounded-[10px] border border-border-default bg-bg-input p-[3px]"
+          >
+            {ENTRY_SCOPES.map((s) => {
+              const selected = scope === s;
+              return (
+                <button
+                  key={s}
+                  type="button"
+                  aria-pressed={selected}
+                  onClick={() => setScope(selected ? '' : s)}
+                  className={cn(
+                    'flex-1 rounded-[7px] border font-mono text-[11px] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent',
+                    selected
+                      ? 'border-border-accent bg-accent-soft font-medium text-text'
+                      : 'border-transparent text-text-dim hover:text-text',
+                  )}
+                >
+                  {s}
+                </button>
+              );
+            })}
+          </fieldset>
+        </div>
       </div>
 
-      {/* Tags — full width */}
-      <div>
-        <div className="mb-1.5 font-mono text-[10.5px] text-text-dim">
-          tags <span className="text-text-muted">· optional</span>
-        </div>
-        <TagInput value={tags} onChange={setTags} ariaLabel="Add tags" />
-      </div>
+      {/* Toggle for tags + notes — keeps Save/Cancel above the fold. Edit
+          mode auto-expands when either field has a value. */}
+      {!showMore && (
+        <button
+          type="button"
+          onClick={() => setShowMore(true)}
+          className="mt-1 inline-flex h-9 items-center justify-center gap-2 rounded-[10px] border border-dashed border-border-strong font-mono text-[11.5px] text-text-dim hover:bg-bg-elev hover:text-text"
+        >
+          <span style={{ color: 'var(--accent)' }}>+</span> more options
+          <span className="text-text-muted">· tags · note</span>
+        </button>
+      )}
 
-      {/* Notes */}
-      <div>
-        <div className="mb-1.5 flex items-center justify-between font-mono text-[10.5px]">
-          <label htmlFor={notesId} className="text-text-dim">
-            note
-          </label>
-          <span className="text-text-muted">optional</span>
-        </div>
-        <textarea
-          id={notesId}
-          value={notes}
-          onChange={(e) => setNotes(e.target.value)}
-          placeholder="rotated, owner, anything that helps future-you"
-          maxLength={2000}
-          rows={2}
-          className="min-h-11 w-full resize-y rounded-[10px] border border-border-default bg-bg-input px-3 py-2.5 font-mono text-[11.5px] text-text leading-[1.5] outline-none placeholder:text-text-muted focus:border-border-accent focus:shadow-[0_0_0_4px_var(--accent-soft)]"
-        />
-      </div>
+      {showMore && (
+        <>
+          {/* Tags — full width */}
+          <div>
+            <div className="mb-1.5 font-mono text-[10.5px] text-text-dim">
+              tags
+            </div>
+            <TagInput value={tags} onChange={setTags} ariaLabel="Add tags" />
+          </div>
+
+          {/* Notes */}
+          <div>
+            <div className="mb-1.5 font-mono text-[10.5px] text-text-dim">
+              <label htmlFor={notesId}>note</label>
+            </div>
+            <textarea
+              id={notesId}
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              placeholder="rotated, owner, anything that helps future-you"
+              maxLength={2000}
+              rows={2}
+              className="min-h-11 w-full resize-y rounded-[10px] border border-border-default bg-bg-input px-3 py-2.5 font-mono text-[11.5px] text-text leading-[1.5] outline-none placeholder:text-text-muted focus:border-border-accent focus:shadow-[0_0_0_4px_var(--accent-soft)]"
+            />
+          </div>
+        </>
+      )}
 
       {error && (
         <p

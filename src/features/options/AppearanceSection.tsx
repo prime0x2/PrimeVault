@@ -18,7 +18,7 @@ export function AppearanceSection({
 
       <fieldset className="flex flex-col gap-2">
         <legend className="font-medium text-[13px] text-text">Theme</legend>
-        <div className="flex gap-2">
+        <div className="flex gap-2 mt-2">
           {THEME_OPTIONS.map((t) => (
             <ThemePill
               key={t}

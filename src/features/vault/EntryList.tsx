@@ -18,6 +18,8 @@ interface EntryListProps {
   query?: string;
   /** Triggered by the no-matches state's "+ new entry" button. */
   onAddEntry?: (() => void) | undefined;
+  /** Bubble up edit requests so Vault can render the form full-screen. */
+  onRequestEdit: (entry: Entry) => void;
   /** Triggered by the no-matches state's "Clear" button. */
   onClearSearch?: (() => void) | undefined;
   /** From prefs; passed through to each row for the post-copy timer. */
@@ -30,11 +32,11 @@ export function EntryList({
   filtered = false,
   query = '',
   onAddEntry,
+  onRequestEdit,
   onClearSearch,
   clipboardClearSeconds,
 }: EntryListProps): React.ReactElement {
   const [expandedId, setExpandedId] = useState<string | null>(null);
-  const [editingId, setEditingId] = useState<string | null>(null);
   const [confirmingDelete, setConfirmingDelete] = useState<Entry | null>(null);
   const [deleting, setDeleting] = useState(false);
 
@@ -74,7 +76,6 @@ export function EntryList({
         id: confirmingDelete.id,
       });
       setConfirmingDelete(null);
-      if (editingId === confirmingDelete.id) setEditingId(null);
       if (expandedId === confirmingDelete.id) setExpandedId(null);
       onMutated();
     } finally {
@@ -89,21 +90,12 @@ export function EntryList({
           <EntryRow
             key={entry.id}
             entry={entry}
-            selected={i === 0 && expandedId === null && editingId === null}
+            selected={i === 0 && expandedId === null}
             expanded={expandedId === entry.id}
-            editing={editingId === entry.id}
             onToggleExpand={() =>
               setExpandedId((id) => (id === entry.id ? null : entry.id))
             }
-            onRequestEdit={() => {
-              setEditingId(entry.id);
-              setExpandedId(null);
-            }}
-            onCancelEdit={() => setEditingId(null)}
-            onSaved={() => {
-              setEditingId(null);
-              onMutated();
-            }}
+            onRequestEdit={() => onRequestEdit(entry)}
             onRequestDelete={() => setConfirmingDelete(entry)}
             onCopied={onMutated}
             clipboardClearSeconds={clipboardClearSeconds}

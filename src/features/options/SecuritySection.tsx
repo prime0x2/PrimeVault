@@ -3,7 +3,6 @@ import { Button, Label, Select } from '../../components/form';
 import {
   AUTO_LOCK_MINUTE_OPTIONS,
   type AutoLockMinutes,
-  CHROME_ALARMS_MIN_SECONDS,
   CLIPBOARD_CLEAR_OPTIONS,
   type ClipboardClearSeconds,
   type Prefs,
@@ -40,7 +39,7 @@ export function SecuritySection({
             const next = Number(e.target.value) as AutoLockMinutes;
             void onChange({ autoLockMinutes: next });
           }}
-          className="w-fit min-w-48"
+          className="w-fit min-w-48 mt-1"
         >
           {AUTO_LOCK_MINUTE_OPTIONS.map((m) => (
             <option key={m} value={m}>
@@ -66,7 +65,7 @@ export function SecuritySection({
             const next = Number(e.target.value) as ClipboardClearSeconds;
             void onChange({ clipboardClearSeconds: next });
           }}
-          className="w-fit min-w-48"
+          className="w-fit min-w-48 mt-1"
         >
           {CLIPBOARD_CLEAR_OPTIONS.map((s) => (
             <option key={s} value={s}>
@@ -78,12 +77,6 @@ export function SecuritySection({
           After you copy a value, the clipboard is overwritten with empty text
           on this timer. Clearing is unconditional — if you copied something
           else in the meantime, that copy is lost too.
-        </p>
-        <p className="font-mono text-[11px] text-text-muted leading-relaxed">
-          Note: Chrome's alarm API has a {CHROME_ALARMS_MIN_SECONDS}-second
-          minimum in production builds, so values below{' '}
-          {CHROME_ALARMS_MIN_SECONDS}s are clamped up to{' '}
-          {CHROME_ALARMS_MIN_SECONDS}s.
         </p>
       </div>
 

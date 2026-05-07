@@ -3,7 +3,6 @@ import { cn } from '../../lib/cn';
 import type { ClipboardClearSeconds } from '../../storage/prefs';
 import type { Entry } from '../../storage/schema';
 import { EntryDetails } from './EntryDetails';
-import { EntryForm } from './EntryForm';
 import { ExpiryBadge } from './ExpiryBadge';
 import { RowActions } from './RowActions';
 import { kindDotColor, relativeTime } from './relative-time';
@@ -12,12 +11,9 @@ import { useCopy } from './useCopy';
 interface EntryRowProps {
   entry: Entry;
   expanded: boolean;
-  editing: boolean;
   selected: boolean;
   onToggleExpand: () => void;
   onRequestEdit: () => void;
-  onCancelEdit: () => void;
-  onSaved: () => void;
   onRequestDelete: () => void;
   onCopied: () => void;
   /** From prefs. 0 disables auto-clear. */
@@ -28,12 +24,9 @@ export function EntryRow(props: EntryRowProps): React.ReactElement {
   const {
     entry,
     expanded,
-    editing,
     selected,
     onToggleExpand,
     onRequestEdit,
-    onCancelEdit,
-    onSaved,
     onRequestDelete,
     onCopied,
     clipboardClearSeconds,
@@ -55,14 +48,6 @@ export function EntryRow(props: EntryRowProps): React.ReactElement {
   const [hovering, setHovering] = useState(false);
   const highlight = selected || expanded || hovering;
 
-  if (editing) {
-    return (
-      <li className="border-y border-border-strong bg-bg-elev px-3 py-3">
-        <EntryForm entry={entry} onSaved={onSaved} onCancel={onCancelEdit} />
-      </li>
-    );
-  }
-
   return (
     <li
       className={cn(
@@ -74,10 +59,10 @@ export function EntryRow(props: EntryRowProps): React.ReactElement {
       onMouseEnter={() => setHovering(true)}
       onMouseLeave={() => setHovering(false)}
     >
-      <div className="flex items-center gap-2.5 px-2.5 py-1.5">
+      <div className="flex items-center gap-3 px-3 py-2">
         <span
           aria-hidden
-          className="h-2 w-2 shrink-0 rounded-full"
+          className="h-2.5 w-2.5 shrink-0 rounded-full"
           style={{ background: kindDotColor(entry.kind) }}
         />
         <button
@@ -91,13 +76,13 @@ export function EntryRow(props: EntryRowProps): React.ReactElement {
               : `Show details for ${entry.name}`
           }
         >
-          <div className="mb-0.5 flex items-center gap-1.5">
-            <span className="max-w-[150px] truncate font-medium font-mono text-[12px] text-text">
+          <div className="mb-1 flex items-center gap-1.5">
+            <span className="max-w-[160px] truncate font-medium font-mono text-[13px] text-text">
               {entry.name}
             </span>
             <ExpiryBadge expiresAt={entry.expiresAt} />
           </div>
-          <div className="flex items-center gap-1 font-mono text-[9.5px]">
+          <div className="flex items-center gap-1 font-mono text-[10.5px]">
             <span className="text-text-muted">{entry.kind}</span>
             {entry.tags.map((t) => (
               <span key={t} className="text-text-dim">
@@ -120,7 +105,7 @@ export function EntryRow(props: EntryRowProps): React.ReactElement {
 
       {copyBanner && (
         <p
-          className="px-2.5 pb-1.5 font-mono text-[10.5px]"
+          className="px-3 pb-2 font-mono text-[11px]"
           style={{ color: 'var(--accent)' }}
           aria-live="polite"
         >
@@ -131,7 +116,7 @@ export function EntryRow(props: EntryRowProps): React.ReactElement {
       )}
 
       {expanded && (
-        <div className="px-2.5 pb-2.5">
+        <div className="px-3 pb-3">
           <EntryDetails entry={entry} onEdit={onRequestEdit} />
         </div>
       )}
