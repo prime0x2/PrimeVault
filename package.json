@@ -28,6 +28,7 @@
     "test:e2e:headed": "playwright test --headed",
     "submit-check": "node scripts/submit-check.mjs",
     "bundle-size-check": "node scripts/bundle-size.mjs",
+    "build:brand": "node scripts/brand/render.mjs",
     "postinstall": "wxt prepare && node -e \"require('node:fs').mkdirSync('.wxt/chrome-data',{recursive:true})\""
   },
   "dependencies": {

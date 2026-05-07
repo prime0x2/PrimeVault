@@ -1,3 +1,8 @@
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/brand/readme-hero-dark.png">
+  <img alt="PrimeVault — a local-only, zero-knowledge vault for the secrets you'd rather not paste into Notes." src="docs/brand/readme-hero-light.png">
+</picture>
+
 # PrimeVault
 
 > Encrypted Chrome extension vault for API keys & tokens. Zero-knowledge, open source, lives in your toolbar.
