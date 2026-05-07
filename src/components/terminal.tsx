@@ -233,13 +233,13 @@ export function Pill({
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1.5 rounded-full border border-border-default bg-bg-elev px-2 py-[3px] font-mono text-[10.5px] text-text-dim tracking-wider',
+        'inline-flex items-center gap-1.5 rounded-full border border-border-default bg-bg-elev px-2 py-0.75 font-mono text-[10.5px] text-text-dim tracking-wider',
         className,
       )}
     >
       {dot !== undefined && (
         <span
-          className="h-[5px] w-[5px] rounded-[3px]"
+          className="h-1.25 w-1.25 rounded-[3px]"
           style={{ background: dot }}
         />
       )}
@@ -259,7 +259,7 @@ export function Kbd({
   return (
     <span
       className={cn(
-        'inline-flex h-[18px] min-w-[18px] items-center justify-center rounded border border-border-default bg-bg-elev px-[5px] font-mono text-[10px] text-text-dim',
+        'inline-flex h-4.5 min-w-4.5 items-center justify-center rounded border border-border-default bg-bg-elev px-1.25 font-mono text-[10px] text-text-dim',
         className,
       )}
     >
@@ -280,7 +280,7 @@ export const PrimaryButton = React.forwardRef<
     type={rest.type ?? 'button'}
     disabled={disabled}
     className={cn(
-      'inline-flex h-[46px] w-full items-center justify-center gap-2 rounded-[10px] font-sans font-semibold text-sm tracking-tight transition-colors',
+      'inline-flex h-11.5 w-full items-center justify-center gap-2 rounded-[10px] font-sans font-semibold text-sm tracking-tight transition-colors',
       'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg',
       disabled
         ? 'cursor-not-allowed border border-border-default bg-bg-elev text-text-dim'
@@ -305,7 +305,7 @@ export const GhostButton = React.forwardRef<
     ref={ref}
     type={rest.type ?? 'button'}
     className={cn(
-      'inline-flex h-9 items-center justify-center gap-2 rounded-[8px] border border-border-default px-3 font-sans font-medium text-[13px] text-text-dim transition-colors',
+      'inline-flex h-9 items-center justify-center gap-2 rounded-xl border border-border-default px-3 font-sans font-medium text-[13px] text-text-dim transition-colors',
       'hover:border-border-strong hover:text-text disabled:cursor-not-allowed disabled:opacity-50',
       'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg',
       className,
@@ -328,10 +328,10 @@ export const DangerButton = React.forwardRef<
     ref={ref}
     type={rest.type ?? 'button'}
     className={cn(
-      'inline-flex h-9 items-center justify-center gap-2 rounded-[8px] border border-transparent px-3 font-sans font-semibold text-[13px] text-white transition-colors',
-      'bg-[var(--danger-strong)] shadow-[0_4px_16px_-8px_var(--danger-strong)] hover:brightness-110',
+      'inline-flex h-9 items-center justify-center gap-2 rounded-xl border border-transparent px-3 font-sans font-semibold text-[13px] text-white transition-colors',
+      'bg-danger-strong shadow-[0_4px_16px_-8px_var(--danger-strong)] hover:brightness-110',
       'disabled:cursor-not-allowed disabled:opacity-60',
-      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--danger)] focus-visible:ring-offset-2 focus-visible:ring-offset-bg',
+      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--danger) focus-visible:ring-offset-2 focus-visible:ring-offset-bg',
       className,
     )}
     {...rest}
@@ -350,7 +350,7 @@ export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
       ref={ref}
       type={rest.type ?? 'button'}
       className={cn(
-        'inline-flex h-[22px] w-[22px] items-center justify-center rounded text-text-dim transition-colors',
+        'inline-flex h-5.5 w-5.5 items-center justify-center rounded text-text-dim transition-colors',
         'hover:bg-bg-elev hover:text-text disabled:cursor-not-allowed disabled:opacity-50',
         'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent',
         className,
@@ -382,7 +382,7 @@ export const TerminalInput = React.forwardRef<
   return (
     <div
       className={cn(
-        'flex h-[46px] items-center rounded-[10px] border bg-bg-input px-[14px] transition-all',
+        'flex h-11.5 items-center rounded-[10px] border bg-bg-input px-3.5 transition-all',
         focused
           ? 'border-border-accent shadow-[0_0_0_4px_var(--accent-soft)]'
           : 'border-border-strong',
@@ -473,7 +473,7 @@ export function PopupShell({
       {/* dusky violet wash at top */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 h-[200px]"
+        className="pointer-events-none absolute inset-x-0 top-0 h-50"
         style={{
           background:
             'radial-gradient(circle at 50% 0%, var(--accent-soft), transparent 60%)',
@@ -497,7 +497,7 @@ export function BrandHeader({
   statusColor?: string;
 }): React.ReactElement {
   return (
-    <div className="flex shrink-0 items-center justify-between px-[18px] py-3.5">
+    <div className="flex shrink-0 items-center justify-between px-4.5 py-3.5">
       <div className="flex items-center gap-2.5">
         <BrandMark size={22} className="text-text" />
         <span className="font-semibold text-[14px] text-text tracking-tight">
@@ -518,7 +518,7 @@ export function PopupFooter({
   children: React.ReactNode;
 }): React.ReactElement {
   return (
-    <div className="flex shrink-0 items-center justify-between border-t border-border-default px-[18px] py-2.5 font-mono text-[10.5px] text-text-muted">
+    <div className="flex shrink-0 items-center justify-between border-t border-border-default px-4.5 py-2.5 font-mono text-[10.5px] text-text-muted">
       {children}
     </div>
   );

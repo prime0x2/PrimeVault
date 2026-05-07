@@ -42,7 +42,7 @@ export function ExpiryBadge({
 
   return (
     <span
-      className="rounded-[4px] border px-1.5 py-px font-mono text-[9.5px]"
+      className="rounded-lg border px-1.5 py-px font-mono text-[9.5px]"
       style={palette}
     >
       {label}

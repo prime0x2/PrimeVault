@@ -28,7 +28,7 @@ export function RowActions({
         disabled={busy}
         aria-label={`Copy value for ${entryName}`}
         title="Copy"
-        className="h-[26px] w-[26px] rounded-md"
+        className="h-6.5 w-6.5 rounded-md"
       >
         {copyFlash ? (
           <svg
@@ -78,7 +78,7 @@ export function RowActions({
         disabled={busy}
         aria-label={`Delete ${entryName}`}
         title="Delete"
-        className="h-[26px] w-[26px] rounded-md hover:text-[var(--danger)]"
+        className="h-6.5 w-6.5 rounded-md hover:text-(--danger)"
       >
         <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden>
           <path

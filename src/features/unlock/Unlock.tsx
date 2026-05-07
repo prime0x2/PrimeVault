@@ -63,17 +63,17 @@ export function Unlock({ onUnlocked }: UnlockProps): React.ReactElement {
     >
       <form
         onSubmit={onSubmit}
-        className="flex flex-1 flex-col px-[22px] pt-[30px] pb-[18px]"
+        className="flex flex-1 flex-col px-5.5 pt-7.5 pb-4.5"
         aria-label="Unlock your vault"
       >
-        <div className="mb-[22px] flex justify-center">
+        <div className="mb-5.5 flex justify-center">
           <BrandMarkLarge size={84} />
         </div>
 
-        <h1 className="mb-1.5 text-center font-semibold text-[26px] leading-[1.1] tracking-[-0.025em]">
+        <h1 className="mb-1.5 text-center font-semibold text-[26px] leading-[1.1] tracking-tight">
           Welcome back.
         </h1>
-        <p className="mb-[26px] text-center text-[13px] text-text-dim">
+        <p className="mb-6.5 text-center text-[13px] text-text-dim">
           Enter your master key.
         </p>
 

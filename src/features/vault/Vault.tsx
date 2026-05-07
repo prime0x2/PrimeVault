@@ -282,7 +282,7 @@ export function Vault({ onLocked, expiresAt }: VaultProps): React.ReactElement {
       )}
 
       {state.kind === 'ready' && (adding || editingEntry) && (
-        <div className="flex-1 overflow-y-auto px-[18px] pt-2 pb-3">
+        <div className="flex-1 overflow-y-auto px-4.5 pt-2 pb-3">
           {/* Terminal-flavored eyebrow — hidden in Calm direction. The
               parent's flex-col + gap layout already handles the missing
               row, so the form just sits closer to the top. */}
@@ -311,11 +311,11 @@ export function Vault({ onLocked, expiresAt }: VaultProps): React.ReactElement {
         !editingEntry &&
         hasEntries &&
         !hasFilter && (
-          <div className="px-[14px] pt-2 pb-3">
+          <div className="px-3.5 pt-2 pb-3">
             <button
               type="button"
               onClick={() => setAdding(true)}
-              className="flex h-[38px] w-full items-center justify-center gap-2 rounded-[10px] border border-dashed border-border-strong bg-transparent font-mono text-[12px] text-text hover:bg-bg-elev"
+              className="flex h-9.5 w-full items-center justify-center gap-2 rounded-[10px] border border-dashed border-border-strong bg-transparent font-mono text-[12px] text-text hover:bg-bg-elev"
             >
               <span style={{ color: 'var(--accent)' }}>+</span> new secret
             </button>
@@ -379,7 +379,7 @@ function FilterChipRow({
   const showToggle = expanded ? expiryUrgencies.length > 0 : overflowCount > 0;
 
   return (
-    <div className="flex flex-wrap gap-1.5 px-[14px] pb-2.5">
+    <div className="flex flex-wrap gap-1.5 px-3.5 pb-2.5">
       <KindChip
         label="all"
         count={allCount}

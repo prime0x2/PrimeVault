@@ -49,7 +49,7 @@ export function EntryRow(props: EntryRowProps): React.ReactElement {
   return (
     <li
       className={cn(
-        'mb-0.5 rounded-[8px] transition-colors',
+        'mb-0.5 rounded-xl transition-colors',
         highlight
           ? 'border border-border-strong bg-bg-elev'
           : 'border border-transparent',
@@ -75,7 +75,7 @@ export function EntryRow(props: EntryRowProps): React.ReactElement {
           }
         >
           <div className="mb-1 flex items-center gap-1.5">
-            <span className="max-w-[160px] truncate font-medium font-mono text-[13px] text-text">
+            <span className="max-w-40 truncate font-medium font-mono text-[13px] text-text">
               {entry.name}
             </span>
             <ExpiryBadge expiresAt={entry.expiresAt} />

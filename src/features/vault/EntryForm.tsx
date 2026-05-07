@@ -195,7 +195,7 @@ export function EntryForm({
           </div>
           <fieldset
             aria-label="scope"
-            className="flex h-10 min-w-0 rounded-[10px] border border-border-default bg-bg-input p-[3px]"
+            className="flex h-10 min-w-0 rounded-[10px] border border-border-default bg-bg-input p-0.75"
           >
             {ENTRY_SCOPES.map((s) => {
               const selected = scope === s;
@@ -255,7 +255,7 @@ export function EntryForm({
               placeholder="rotated, owner, anything that helps future-you"
               maxLength={2000}
               rows={2}
-              className="min-h-11 w-full resize-y rounded-[10px] border border-border-default bg-bg-input px-3 py-2.5 font-mono text-[11.5px] text-text leading-[1.5] outline-none placeholder:text-text-muted focus:border-border-accent focus:shadow-[0_0_0_4px_var(--accent-soft)]"
+              className="min-h-11 w-full resize-y rounded-[10px] border border-border-default bg-bg-input px-3 py-2.5 font-mono text-[11.5px] text-text leading-normal outline-none placeholder:text-text-muted focus:border-border-accent focus:shadow-[0_0_0_4px_var(--accent-soft)]"
             />
           </div>
         </>
@@ -284,7 +284,7 @@ export function EntryForm({
           type="submit"
           disabled={!canSubmit}
           className={cn(
-            'inline-flex h-10 flex-[2] items-center justify-center rounded-[10px] font-sans font-semibold text-[13px] transition-colors',
+            'inline-flex h-10 flex-2 items-center justify-center rounded-[10px] font-sans font-semibold text-[13px] transition-colors',
             canSubmit
               ? 'bg-accent text-bg shadow-[0_4px_16px_-8px_var(--accent)] hover:brightness-110'
               : 'cursor-not-allowed border border-border-default bg-bg-elev text-text-dim',

@@ -22,13 +22,13 @@ export function EntryDetails({
   onEdit,
 }: EntryDetailsProps): React.ReactElement {
   return (
-    <div className="flex flex-col gap-2.5 rounded-[8px] border border-border-default bg-bg-sunken px-3 py-2.5">
+    <div className="flex flex-col gap-2.5 rounded-xl border border-border-default bg-bg-sunken px-3 py-2.5">
       {entry.notes && (
         <div className="flex flex-col gap-1">
           <span className="font-mono text-[9.5px] text-text-muted tracking-[0.18em]">
             NOTE
           </span>
-          <p className="whitespace-pre-wrap font-mono text-[11.5px] text-text-dim leading-[1.5]">
+          <p className="whitespace-pre-wrap font-mono text-[11.5px] text-text-dim leading-normal">
             {entry.notes}
           </p>
         </div>
@@ -63,7 +63,7 @@ export function EntryDetails({
       </dl>
 
       <div className="flex justify-end">
-        <GhostButton onClick={onEdit} className="h-8 rounded-[8px] text-[12px]">
+        <GhostButton onClick={onEdit} className="h-8 rounded-xl text-[12px]">
           Edit
         </GhostButton>
       </div>

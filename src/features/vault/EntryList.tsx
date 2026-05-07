@@ -138,7 +138,7 @@ function EmptyState({
       <h2 className="mt-5 mb-1.5 font-semibold text-[18px] tracking-[-0.015em]">
         Vault is empty.
       </h2>
-      <p className="m-0 max-w-[240px] text-[12.5px] text-text-dim leading-[1.55]">
+      <p className="m-0 max-w-60 text-[12.5px] text-text-dim leading-[1.55]">
         Stash your first secret with the button below — or paste any value to
         auto-detect type.
       </p>
@@ -146,7 +146,7 @@ function EmptyState({
         <button
           type="button"
           onClick={onAddEntry}
-          className="mt-[22px] inline-flex items-center gap-2 rounded-[10px] border border-dashed border-border-strong px-[18px] py-2.5 font-mono text-[12px] text-text hover:bg-bg-elev"
+          className="mt-5.5 inline-flex items-center gap-2 rounded-[10px] border border-dashed border-border-strong px-4.5 py-2.5 font-mono text-[12px] text-text hover:bg-bg-elev"
         >
           <span style={{ color: 'var(--accent)' }}>+</span> new secret
         </button>
@@ -173,7 +173,7 @@ function NoMatchesState({
     : 'Clear the filter to see every entry, or stash a new one.';
   return (
     <div className="flex flex-1 flex-col items-center justify-center px-7 text-center">
-      <div className="mb-4.5 flex h-[60px] w-[60px] items-center justify-center rounded-2xl border border-border-default bg-bg-elev">
+      <div className="mb-4.5 flex h-15 w-15 items-center justify-center rounded-2xl border border-border-default bg-bg-elev">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden>
           <circle
             cx="10"
@@ -193,7 +193,7 @@ function NoMatchesState({
       <p className="terminal-only mb-2.5 font-mono text-[11px] text-text-muted">
         <span style={{ color: 'var(--accent)' }}>›</span> {eyebrow}
       </p>
-      <h2 className="mb-1.5 font-semibold text-[18px] leading-[1.25] tracking-[-0.015em]">
+      <h2 className="mb-1.5 font-semibold text-[18px] leading-tight tracking-[-0.015em]">
         {isSearch ? (
           <>
             No entry matches
@@ -212,7 +212,7 @@ function NoMatchesState({
           </>
         )}
       </h2>
-      <p className="m-0 max-w-[240px] text-[12.5px] text-text-dim leading-[1.55]">
+      <p className="m-0 max-w-60 text-[12.5px] text-text-dim leading-[1.55]">
         {hint}
       </p>
       <div className="mt-5 flex gap-2">
@@ -223,7 +223,7 @@ function NoMatchesState({
           <button
             type="button"
             onClick={onAddEntry}
-            className="inline-flex h-9 items-center gap-2 rounded-[8px] bg-accent px-3.5 font-sans font-semibold text-[12.5px] text-bg shadow-[0_4px_16px_-8px_var(--accent)] hover:brightness-110"
+            className="inline-flex h-9 items-center gap-2 rounded-xl bg-accent px-3.5 font-sans font-semibold text-[12.5px] text-bg shadow-[0_4px_16px_-8px_var(--accent)] hover:brightness-110"
           >
             + new entry
           </button>
@@ -266,7 +266,7 @@ function DeleteConfirmModal({
       >
         <div className="mb-3 flex items-center gap-2.5">
           <div
-            className="flex h-8 w-8 items-center justify-center rounded-[8px] border"
+            className="flex h-8 w-8 items-center justify-center rounded-xl border"
             style={{
               background: 'var(--danger-soft)',
               borderColor: 'var(--danger-border)',
@@ -288,7 +288,7 @@ function DeleteConfirmModal({
             </svg>
           </div>
           <div
-            className="font-mono text-[11px] tracking-[0.1em]"
+            className="font-mono text-[11px] tracking-widest"
             style={{ color: 'var(--danger)' }}
           >
             DELETE ENTRY
@@ -297,7 +297,7 @@ function DeleteConfirmModal({
 
         <h2
           id="delete-title"
-          className="mb-1.5 font-semibold text-[18px] leading-[1.25] tracking-[-0.015em]"
+          className="mb-1.5 font-semibold text-[18px] leading-tight tracking-[-0.015em]"
         >
           Delete{' '}
           <span className="font-mono" style={{ color: 'var(--accent)' }}>
@@ -311,7 +311,7 @@ function DeleteConfirmModal({
         </p>
 
         <div
-          className="terminal-only mb-4 rounded-[8px] border bg-bg-sunken px-2.5 py-2 font-mono text-[11px] text-text-dim"
+          className="terminal-only mb-4 rounded-xl border bg-bg-sunken px-2.5 py-2 font-mono text-[11px] text-text-dim"
           style={{ borderColor: 'var(--border)' }}
         >
           <span style={{ color: 'var(--accent)' }}>›</span> rm {entryName}{' '}
@@ -323,7 +323,7 @@ function DeleteConfirmModal({
             type="button"
             onClick={onCancel}
             disabled={deleting}
-            className="flex-1 h-10 rounded-[8px]"
+            className="flex-1 h-10 rounded-xl"
           >
             Cancel
           </GhostButton>
@@ -331,7 +331,7 @@ function DeleteConfirmModal({
             type="button"
             onClick={onConfirm}
             disabled={deleting}
-            className="flex-1 h-10 rounded-[8px]"
+            className="flex-1 h-10 rounded-xl"
           >
             {deleting ? 'Deleting…' : 'Delete'}
           </DangerButton>

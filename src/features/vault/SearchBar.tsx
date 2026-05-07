@@ -34,10 +34,10 @@ export function SearchBar({
   const display = filtered ? `${count} / ${total}` : `${total}`;
 
   return (
-    <div className="px-[14px] pt-2 pb-3">
+    <div className="px-3.5 pt-2 pb-3">
       <div
         className={cn(
-          'flex h-[42px] items-center rounded-[10px] border bg-bg-elev px-3 transition-all',
+          'flex h-10.5 items-center rounded-[10px] border bg-bg-elev px-3 transition-all',
           filtered
             ? 'border-border-accent shadow-[0_0_0_4px_var(--accent-soft)]'
             : 'border-border-strong',
@@ -83,7 +83,7 @@ export function SearchBar({
             onClick={() => onChange('')}
             aria-label="Clear search"
             title="Clear (Esc)"
-            className="inline-flex h-[18px] w-[18px] items-center justify-center rounded text-text-dim hover:text-text"
+            className="inline-flex h-4.5 w-4.5 items-center justify-center rounded text-text-dim hover:text-text"
           >
             <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
               <path

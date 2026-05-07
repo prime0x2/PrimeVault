@@ -123,16 +123,16 @@ export function Onboarding({ onCreated }: OnboardingProps): React.ReactElement {
     >
       <form
         onSubmit={onSubmit}
-        className="flex flex-1 flex-col px-[22px] pt-6 pb-[18px]"
+        className="flex flex-1 flex-col px-5.5 pt-6 pb-4.5"
         aria-label="Create your master password"
       >
         <div className="terminal-only mb-2.5 font-mono text-[11px] text-text-muted">
           <span className="text-accent">›</span> init vault
         </div>
-        <h1 className="mb-2.5 font-semibold text-[26px] leading-[1.15] tracking-[-0.025em]">
+        <h1 className="mb-2.5 font-semibold text-[26px] leading-[1.15] tracking-tight">
           Set your <span style={{ color: 'var(--accent)' }}>master key</span>.
         </h1>
-        <p className="mb-[22px] max-w-[320px] text-[13px] text-text-dim leading-[1.55]">
+        <p className="mb-5.5 max-w-[320px] text-[13px] text-text-dim leading-[1.55]">
           It unlocks everything. There is no recovery — only this device, only
           this key.
         </p>

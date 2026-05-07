@@ -53,8 +53,8 @@ function ThemePill({
   return (
     <label
       className={cn(
-        'cursor-pointer rounded-[8px] border px-3 py-1.5 font-mono text-[12px] capitalize transition-colors',
-        'has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-accent',
+        'cursor-pointer rounded-xl border px-3 py-1.5 font-mono text-[12px] capitalize transition-colors',
+        'has-focus-visible:ring-2 has-focus-visible:ring-accent',
         selected
           ? 'border-border-accent bg-accent-soft text-text'
           : 'border-border-default bg-transparent text-text-dim hover:border-border-strong hover:text-text',
