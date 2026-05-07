@@ -124,3 +124,35 @@ body {
 :root.light {
   color-scheme: dark;
 }
+
+/*
+ * Scrollbars — phosphor-aware, calm in rest, accent on hover.
+ * Firefox uses the standard properties; Chromium/WebKit gets the
+ * fuller treatment via the ::-webkit-scrollbar pseudo-elements.
+ */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 999px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-soft);
+}
+
+*::-webkit-scrollbar-corner {
+  background: transparent;
+}

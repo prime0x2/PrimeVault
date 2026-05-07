@@ -18,10 +18,7 @@
 
 import { useEffect, useState } from 'react';
 import { popupClient } from '../../messaging/popup-client';
-import {
-  type ClipboardClearSeconds,
-  effectiveClipboardClearSeconds,
-} from '../../storage/prefs';
+import type { ClipboardClearSeconds } from '../../storage/prefs';
 
 const COPY_FLASH_MS = 1_000;
 const COPY_BANNER_MAX_MS = 8_000;
@@ -38,7 +35,7 @@ export interface UseCopyResult {
   busy: boolean;
   copyFlash: boolean;
   copyBanner: boolean;
-  /** The clear delay actually visible to the user, after Chrome's floor. */
+  /** The clear delay shown next to the post-copy banner. */
   displaySeconds: number;
 }
 
@@ -52,7 +49,7 @@ export function useCopy({
   const [copyBanner, setCopyBanner] = useState(false);
   const [busy, setBusy] = useState(false);
 
-  const displaySeconds = effectiveClipboardClearSeconds(clipboardClearSeconds);
+  const displaySeconds = clipboardClearSeconds;
 
   useEffect(() => {
     if (!copyFlash) return;

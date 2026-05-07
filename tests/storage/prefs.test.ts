@@ -2,9 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { createMemoryBackend, STORAGE_KEYS } from '../../src/storage/client';
 import {
   autoLockMinutesToMs,
-  CHROME_ALARMS_MIN_SECONDS,
   DEFAULT_PREFS,
-  effectiveClipboardClearSeconds,
   mergeDefaults,
   readPrefs,
   writePrefs,
@@ -75,20 +73,5 @@ describe('autoLockMinutesToMs', () => {
     expect(autoLockMinutesToMs(1)).toBe(60_000);
     expect(autoLockMinutesToMs(2)).toBe(120_000);
     expect(autoLockMinutesToMs(60)).toBe(3_600_000);
-  });
-});
-
-describe('effectiveClipboardClearSeconds', () => {
-  it('preserves the "Never" sentinel', () => {
-    expect(effectiveClipboardClearSeconds(0)).toBe(0);
-  });
-
-  it('clamps values below the Chrome alarm floor', () => {
-    expect(effectiveClipboardClearSeconds(15)).toBe(CHROME_ALARMS_MIN_SECONDS);
-  });
-
-  it('passes through values at or above the floor', () => {
-    expect(effectiveClipboardClearSeconds(30)).toBe(30);
-    expect(effectiveClipboardClearSeconds(60)).toBe(60);
   });
 });

@@ -20,7 +20,9 @@ export const PREFS_VERSION = 1 as const;
 export const AUTO_LOCK_MINUTE_OPTIONS = [0, 1, 2, 5, 15, 60] as const;
 export type AutoLockMinutes = (typeof AUTO_LOCK_MINUTE_OPTIONS)[number];
 
-export const CLIPBOARD_CLEAR_OPTIONS = [0, 15, 30, 60] as const;
+// 15s isn't offered: chrome.alarms floors any non-dev alarm to ~30s, so a
+// 15s setting would silently behave like 30s — confusing more than useful.
+export const CLIPBOARD_CLEAR_OPTIONS = [0, 30, 60] as const;
 export type ClipboardClearSeconds = (typeof CLIPBOARD_CLEAR_OPTIONS)[number];
 
 export const THEME_OPTIONS = ['system', 'light', 'dark'] as const;
@@ -46,7 +48,6 @@ export const prefsSchema = z.object({
   clipboardClearSeconds: z.union(
     CLIPBOARD_CLEAR_OPTIONS.map((n) => z.literal(n)) as [
       z.ZodLiteral<0>,
-      z.ZodLiteral<15>,
       z.ZodLiteral<30>,
       z.ZodLiteral<60>,
     ],
@@ -127,23 +128,4 @@ export async function writePrefs(
  */
 export function autoLockMinutesToMs(minutes: AutoLockMinutes): number {
   return minutes * 60 * 1000;
-}
-
-/**
- * Chrome's `chrome.alarms` API floors any non-dev alarm to ~30 seconds.
- * Anything we schedule below this fires at 30s anyway.
- */
-export const CHROME_ALARMS_MIN_SECONDS = 30;
-
-/**
- * The clipboard-clear delay the user actually experiences, accounting for
- * Chrome's alarm-API floor. `0` (Never) is preserved; otherwise the value is
- * clamped up to {@link CHROME_ALARMS_MIN_SECONDS}. Used for honest UI copy
- * so the popup never promises a clear faster than Chrome will deliver it.
- */
-export function effectiveClipboardClearSeconds(
-  seconds: ClipboardClearSeconds,
-): number {
-  if (seconds === 0) return 0;
-  return Math.max(seconds, CHROME_ALARMS_MIN_SECONDS);
 }
