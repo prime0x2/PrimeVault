@@ -45,7 +45,7 @@ export function SearchBar({
       >
         <span
           className="terminal-only mr-2.5 select-none font-mono text-[14px] text-accent"
-          aria-hidden
+          aria-hidden="true"
         >
           ›
         </span>
@@ -55,7 +55,7 @@ export function SearchBar({
           height="14"
           viewBox="0 0 14 14"
           fill="none"
-          aria-hidden
+          aria-hidden="true"
         >
           <circle cx="6" cy="6" r="4" stroke="currentColor" strokeWidth="1.3" />
           <path
@@ -85,7 +85,13 @@ export function SearchBar({
             title="Clear (Esc)"
             className="inline-flex h-4.5 w-4.5 items-center justify-center rounded text-text-dim hover:text-text"
           >
-            <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
+            <svg
+              width="11"
+              height="11"
+              viewBox="0 0 11 11"
+              fill="none"
+              aria-hidden="true"
+            >
               <path
                 d="M2 2l7 7M9 2l-7 7"
                 stroke="currentColor"

@@ -64,7 +64,13 @@ export function TagInput({
             aria-label={`Remove tag ${tag}`}
             className="rounded text-text-muted hover:text-text"
           >
-            <svg width="9" height="9" viewBox="0 0 9 9" fill="none">
+            <svg
+              width="9"
+              height="9"
+              viewBox="0 0 9 9"
+              fill="none"
+              aria-hidden="true"
+            >
               <path
                 d="M2 2l5 5M7 2l-5 5"
                 stroke="currentColor"

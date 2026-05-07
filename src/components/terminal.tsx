@@ -78,7 +78,7 @@ export function DialMark({
       viewBox="0 0 28 28"
       fill="none"
       className={className}
-      aria-hidden
+      aria-hidden="true"
     >
       <circle
         cx="14"
@@ -125,7 +125,7 @@ export function KeyholeMark({
       viewBox="0 0 28 28"
       fill="none"
       className={className}
-      aria-hidden
+      aria-hidden="true"
     >
       <circle
         cx="14"
@@ -147,7 +147,13 @@ export function KeyholeMarkLarge({
   size?: number;
 }): React.ReactElement {
   return (
-    <svg width={size} height={size} viewBox="0 0 80 80" fill="none" aria-hidden>
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 80 80"
+      fill="none"
+      aria-hidden="true"
+    >
       <circle cx="40" cy="40" r="34" stroke="currentColor" strokeWidth="1.6" />
       <circle
         cx="40"
@@ -171,7 +177,13 @@ export function DialMarkLarge({
 }): React.ReactElement {
   const ticks = Array.from({ length: 36 }, (_, i) => i);
   return (
-    <svg width={size} height={size} viewBox="0 0 80 80" fill="none" aria-hidden>
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 80 80"
+      fill="none"
+      aria-hidden="true"
+    >
       {ticks.map((i) => {
         const a = (i / 36) * Math.PI * 2 - Math.PI / 2;
         const major = i % 9 === 0;
@@ -391,7 +403,7 @@ export const TerminalInput = React.forwardRef<
     >
       <span
         className="terminal-only mr-2.5 select-none font-mono text-[13px] text-accent"
-        aria-hidden
+        aria-hidden="true"
       >
         {prefix}
       </span>
@@ -419,7 +431,13 @@ TerminalInput.displayName = 'TerminalInput';
 // ───── Footer icons (lock, settings) — small SVGs ──────────────────────────
 export function LockIcon({ size = 13 }: { size?: number }): React.ReactElement {
   return (
-    <svg width={size} height={size} viewBox="0 0 16 16" fill="none" aria-hidden>
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 16 16"
+      fill="none"
+      aria-hidden="true"
+    >
       <rect
         x="3"
         y="7"
@@ -445,7 +463,13 @@ export function SettingsIcon({
   size?: number;
 }): React.ReactElement {
   return (
-    <svg width={size} height={size} viewBox="0 0 16 16" fill="none" aria-hidden>
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 16 16"
+      fill="none"
+      aria-hidden="true"
+    >
       <path
         d="M8 6.2a1.8 1.8 0 1 0 0 3.6 1.8 1.8 0 0 0 0-3.6Zm5.5 1.8c0-.3 0-.6-.07-.9l1.27-.95-1.4-2.4-1.5.5a4.5 4.5 0 0 0-1.55-.9L9.9 1.5h-3.8l-.35 1.85a4.5 4.5 0 0 0-1.55.9l-1.5-.5-1.4 2.4 1.27.95a4.5 4.5 0 0 0 0 1.8L1.3 9.85l1.4 2.4 1.5-.5c.45.4.97.7 1.55.9L6.1 14.5h3.8l.35-1.85a4.5 4.5 0 0 0 1.55-.9l1.5.5 1.4-2.4-1.27-.95c.05-.3.07-.6.07-.9Z"
         stroke="currentColor"
@@ -472,7 +496,7 @@ export function PopupShell({
     <div className={cn('relative flex h-full flex-1 flex-col', className)}>
       {/* dusky violet wash at top */}
       <div
-        aria-hidden
+        aria-hidden="true"
         className="pointer-events-none absolute inset-x-0 top-0 h-50"
         style={{
           background:

@@ -56,9 +56,7 @@
         "useHookAtTopLevel": "error",
         "noUnusedImports": "error"
       },
-      "a11y": {
-        "noSvgWithoutTitle": "off"
-      }
+      "a11y": {}
     }
   },
   "assist": {

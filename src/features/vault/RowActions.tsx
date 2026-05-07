@@ -36,7 +36,7 @@ export function RowActions({
             height="14"
             viewBox="0 0 16 16"
             fill="none"
-            aria-hidden
+            aria-hidden="true"
             style={{ color: 'var(--accent)' }}
           >
             <path
@@ -53,7 +53,7 @@ export function RowActions({
             height="14"
             viewBox="0 0 16 16"
             fill="none"
-            aria-hidden
+            aria-hidden="true"
           >
             <rect
               x="5"
@@ -80,7 +80,13 @@ export function RowActions({
         title="Delete"
         className="h-6.5 w-6.5 rounded-md hover:text-(--danger)"
       >
-        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden>
+        <svg
+          width="14"
+          height="14"
+          viewBox="0 0 16 16"
+          fill="none"
+          aria-hidden="true"
+        >
           <path
             d="M3 5h10M6.5 5V3.5h3V5M5 5v8a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1V5"
             stroke="currentColor"

@@ -174,7 +174,13 @@ function NoMatchesState({
   return (
     <div className="flex flex-1 flex-col items-center justify-center px-7 text-center">
       <div className="mb-4.5 flex h-15 w-15 items-center justify-center rounded-2xl border border-border-default bg-bg-elev">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden>
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
           <circle
             cx="10"
             cy="10"
@@ -272,7 +278,13 @@ function DeleteConfirmModal({
               borderColor: 'var(--danger-border)',
             }}
           >
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+              aria-hidden="true"
+            >
               <path
                 d="M8 5v4M8 11v.5"
                 stroke="var(--danger)"
