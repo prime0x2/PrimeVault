@@ -1,7 +1,5 @@
 import { useId, useRef, useState } from 'react';
-import { Button } from '../../components/ui/button';
-import { Input } from '../../components/ui/input';
-import { Label } from '../../components/ui/label';
+import { Alert, Button, Input, Label } from '../../components/form';
 import { popupClient } from '../../messaging/popup-client';
 import { MessagingError } from '../../messaging/protocol';
 import { readJsonFile } from '../backup/download';
@@ -89,10 +87,10 @@ export function ImportEncryptedForm({
 
   return (
     <form onSubmit={onSubmit} className="flex flex-col gap-3" noValidate>
-      <p className="rounded-md border border-yellow-500/40 bg-yellow-500/10 px-3 py-2 text-xs leading-relaxed dark:text-yellow-200">
+      <Alert tone="warn">
         Importing a backup <strong>replaces</strong> your current vault. Make
         sure you've exported it first if there's anything you want to keep.
-      </p>
+      </Alert>
 
       <div className="flex flex-col gap-1.5">
         <Label htmlFor={fileId} className="text-sm">
@@ -107,7 +105,7 @@ export function ImportEncryptedForm({
           className="cursor-pointer file:mr-3 file:rounded file:border file:border-input file:bg-muted file:px-2 file:py-0.5 file:text-foreground"
         />
         {state.kind === 'fileChosen' && (
-          <p className="text-muted-foreground text-xs">
+          <p className="text-text-dim text-xs">
             Loaded <code className="font-mono">{state.filename}</code>. Enter
             the password it was exported with.
           </p>
@@ -129,12 +127,9 @@ export function ImportEncryptedForm({
       </div>
 
       {state.kind === 'error' && (
-        <p
-          role="alert"
-          className="rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-destructive text-xs"
-        >
+        <Alert role="alert" tone="danger">
           {state.message}
-        </p>
+        </Alert>
       )}
 
       <div className="flex justify-end gap-2 pt-1">

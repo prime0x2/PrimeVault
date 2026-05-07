@@ -1,13 +1,16 @@
-import { AlertTriangle, Clock } from 'lucide-react';
-import { Badge } from '../../components/ui/badge';
 import { daysUntilExpiry, expiryUrgency } from './expiry';
 
 interface ExpiryBadgeProps {
   expiresAt: string | undefined;
-  /** Injectable for tests / Storybook. Defaults to wall-clock. */
+  /** Injectable for tests. Defaults to wall-clock. */
   now?: number;
 }
 
+/**
+ * Direction B: small mono chip next to the entry name. Only renders when
+ * there is something to communicate (expired / approaching expiry).
+ * Healthy entries return null — keeps rows quiet.
+ */
 export function ExpiryBadge({
   expiresAt,
   now = Date.now(),
@@ -17,19 +20,32 @@ export function ExpiryBadge({
     return null;
   }
   const days = daysUntilExpiry(expiresAt, now);
-  const variant = urgency === 'expired' ? 'destructive' : 'warning';
-  const Icon = urgency === 'expired' ? AlertTriangle : Clock;
   const label =
     urgency === 'expired'
-      ? days === 0
-        ? 'expires today'
-        : `expired ${-days}d ago`
-      : `expires in ${days}d`;
+      ? 'expired'
+      : days <= 0
+        ? 'exp today'
+        : `exp ${days}d`;
+
+  const palette =
+    urgency === 'expired'
+      ? {
+          color: 'var(--danger)',
+          background: 'var(--danger-soft)',
+          borderColor: 'var(--danger-border)',
+        }
+      : {
+          color: 'var(--warn)',
+          background: 'var(--warn-soft)',
+          borderColor: 'var(--warn-border)',
+        };
 
   return (
-    <Badge variant={variant}>
-      <Icon className="h-2.5 w-2.5" aria-hidden />
+    <span
+      className="rounded-lg border px-1.5 py-px font-mono text-[9.5px]"
+      style={palette}
+    >
       {label}
-    </Badge>
+    </span>
   );
 }

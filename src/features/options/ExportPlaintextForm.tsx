@@ -1,7 +1,5 @@
 import { useId, useState } from 'react';
-import { Button } from '../../components/ui/button';
-import { Input } from '../../components/ui/input';
-import { Label } from '../../components/ui/label';
+import { Alert, Button, Input, Label } from '../../components/form';
 import { popupClient } from '../../messaging/popup-client';
 import { MessagingError } from '../../messaging/protocol';
 import { downloadJson } from '../backup/download';
@@ -69,10 +67,10 @@ export function ExportPlaintextForm({
   return (
     <form
       onSubmit={onSubmit}
-      className="flex flex-col gap-3 rounded-md border border-destructive/30 bg-destructive/5 p-3"
+      className="flex flex-col gap-3 rounded-md border border-danger-border bg-danger-soft p-3"
       noValidate
     >
-      <p className="text-destructive text-sm">
+      <p className="text-danger text-sm">
         Plaintext export is unencrypted. Every secret in your vault will be
         written to disk in readable form.
       </p>
@@ -109,12 +107,9 @@ export function ExportPlaintextForm({
       </div>
 
       {error && (
-        <p
-          role="alert"
-          className="rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-destructive text-xs"
-        >
+        <Alert role="alert" tone="danger">
           {error}
-        </p>
+        </Alert>
       )}
 
       <div className="flex justify-end gap-2 pt-1">

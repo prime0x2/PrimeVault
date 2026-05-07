@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>PrimeVault icon</title>
+<style>
+  html, body { margin: 0; padding: 0; background: transparent; }
+  body { display: flex; align-items: center; justify-content: center; }
+  .tile { display: flex; align-items: center; justify-content: center; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  const params = new URLSearchParams(location.search);
+  const variant = params.get('variant') || 'ember';
+  const size = parseInt(params.get('size') || '128', 10);
+
+  const ACCENT = '#5fdc89';
+  const EMBER = '#db5c39';
+  const isDark = variant === 'dark';
+  const bg = isDark ? '#07090a' : EMBER;
+  const ringColor = isDark ? 'rgba(255,255,255,0.7)' : 'rgba(255,255,255,0.85)';
+  const accentColor = isDark ? ACCENT : '#ffffff';
+
+  // Match brand-pack: rounded-square at 18% corner radius for >=32px,
+  // tiny 3px corner for the 16px favicon-class size.
+  const radius = size >= 32 ? Math.round(size * 0.18) : 3;
+
+  // Mark fills 85% of the tile; under 48px we drop the tick ring.
+  const markSize = size >= 48 ? Math.round(size * 0.78) : Math.round(size * 0.85);
+  const showTicks = size >= 96;
+
+  function dialMarkLarge(s) {
+    // Reproduces DialMark from the brand pack: 80×80 viewBox.
+    const cx = 40, cy = 40;
+    const ticks = [];
+    if (showTicks) {
+      for (let i = 0; i < 36; i++) {
+        const a = (i / 36) * Math.PI * 2 - Math.PI / 2;
+        const isMajor = i % 9 === 0;
+        const r1 = isMajor ? 32 : 35;
+        const r2 = 38;
+        ticks.push(`<line x1="${cx + Math.cos(a) * r1}" y1="${cy + Math.sin(a) * r1}" x2="${cx + Math.cos(a) * r2}" y2="${cy + Math.sin(a) * r2}" stroke="${ringColor}" stroke-width="${isMajor ? 1.2 : 0.7}" opacity="${isMajor ? 0.9 : 0.4}" />`);
+      }
+    }
+    return `<svg width="${s}" height="${s}" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+      ${ticks.join('')}
+      <circle cx="${cx}" cy="${cy}" r="29" stroke="${ringColor}" stroke-width="1.1" fill="none" />
+      <circle cx="${cx}" cy="${cy}" r="20" stroke="${accentColor}" stroke-width="1.6" fill="none" />
+      <circle cx="${cx}" cy="${cy}" r="11" stroke="${ringColor}" stroke-width="0.9" opacity="0.5" fill="none" />
+      <line x1="${cx}" y1="6" x2="${cx}" y2="14" stroke="${accentColor}" stroke-width="2.2" stroke-linecap="round" />
+      <circle cx="${cx}" cy="${cy}" r="2.6" fill="${accentColor}" />
+    </svg>`;
+  }
+
+  function dialMarkSmall(s) {
+    // 32×32 viewBox; no ticks. Used at 16/32px tile sizes.
+    return `<svg width="${s}" height="${s}" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="16" cy="16" r="11" stroke="${ringColor}" stroke-width="1.4" fill="none" />
+      <circle cx="16" cy="16" r="7" stroke="${accentColor}" stroke-width="1.6" fill="none" />
+      <line x1="16" y1="3" x2="16" y2="6" stroke="${accentColor}" stroke-width="1.8" stroke-linecap="round" />
+      <circle cx="16" cy="16" r="1.4" fill="${accentColor}" />
+    </svg>`;
+  }
+
+  const mark = size >= 48 ? dialMarkLarge(markSize) : dialMarkSmall(markSize);
+
+  const root = document.getElementById('root');
+  root.innerHTML = `<div class="tile" style="width:${size}px;height:${size}px;border-radius:${radius}px;background:${bg};">${mark}</div>`;
+
+  // Resize the viewport tightly around the tile so the screenshot is exact.
+  document.body.style.width = size + 'px';
+  document.body.style.height = size + 'px';
+
+  // No web fonts on the icon, so we're ready immediately.
+  requestAnimationFrame(() => { document.body.dataset.ready = 'true'; });
+</script>
+</body>
+</html>

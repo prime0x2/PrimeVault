@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>PrimeVault social card</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  html, body { margin: 0; padding: 0; }
+  body { width: 1280px; height: 640px; font-family: 'Geist', system-ui, sans-serif; }
+  * { box-sizing: border-box; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  const ACCENT = '#5fdc89';
+  const EMBER = '#db5c39';
+  const LIGHT_INK = '#1a1a1a';
+  const variant = new URLSearchParams(location.search).get('variant') || 'dark';
+  const dark = variant === 'dark';
+
+  function dialMark(size, ringColor, accentColor) {
+    const cx = 40, cy = 40;
+    const ticks = [];
+    for (let i = 0; i < 36; i++) {
+      const a = (i / 36) * Math.PI * 2 - Math.PI / 2;
+      const isMajor = i % 9 === 0;
+      const r1 = isMajor ? 32 : 35;
+      const r2 = 38;
+      ticks.push(`<line x1="${cx + Math.cos(a) * r1}" y1="${cy + Math.sin(a) * r1}" x2="${cx + Math.cos(a) * r2}" y2="${cy + Math.sin(a) * r2}" stroke="${ringColor}" stroke-width="${isMajor ? 1.2 : 0.7}" opacity="${isMajor ? 0.9 : 0.4}" />`);
+    }
+    return `<svg width="${size}" height="${size}" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+      ${ticks.join('')}
+      <circle cx="${cx}" cy="${cy}" r="29" stroke="${ringColor}" stroke-width="1.1" fill="none" />
+      <circle cx="${cx}" cy="${cy}" r="20" stroke="${accentColor}" stroke-width="1.6" fill="none" />
+      <circle cx="${cx}" cy="${cy}" r="11" stroke="${ringColor}" stroke-width="0.9" opacity="0.5" fill="none" />
+      <line x1="${cx}" y1="6" x2="${cx}" y2="14" stroke="${accentColor}" stroke-width="2.2" stroke-linecap="round" />
+      <circle cx="${cx}" cy="${cy}" r="2.6" fill="${accentColor}" />
+    </svg>`;
+  }
+
+  const features = ['local-only', 'zero-knowledge', 'encrypted backup', 'no telemetry', 'open source'];
+
+  let html;
+  if (dark) {
+    const cornerMarks = [
+      { top: 32, left: 32, rot: 0 },
+      { top: 32, right: 32, rot: 90 },
+      { bottom: 32, right: 32, rot: 180 },
+      { bottom: 32, left: 32, rot: 270 },
+    ].map((p) => {
+      const pos = Object.entries(p).filter(([k]) => k !== 'rot').map(([k, v]) => `${k}:${v}px`).join(';');
+      return `<svg width="22" height="22" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg" style="position:absolute;${pos};transform:rotate(${p.rot}deg);"><path d="M2 2H10M2 2V10" stroke="rgba(120,255,150,0.4)" stroke-width="1" /></svg>`;
+    }).join('');
+
+    const pills = features.map((f) =>
+      `<span style="font-family:'Geist Mono';font-size:13px;padding:6px 12px;border:1px solid rgba(120,255,150,0.18);background:rgba(120,255,150,0.05);color:#c8d4c8;border-radius:999px;">${f}</span>`
+    ).join('');
+
+    html = `
+      <div style="width:1280px;height:640px;background:radial-gradient(ellipse at 30% 40%, #11160e 0%, #06080a 70%);position:relative;overflow:hidden;color:#e6f0e6;">
+        <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(120,255,150,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(120,255,150,0.05) 1px, transparent 1px);background-size:48px 48px;-webkit-mask-image:radial-gradient(ellipse at 30% 50%, black 10%, transparent 80%);mask-image:radial-gradient(ellipse at 30% 50%, black 10%, transparent 80%);"></div>
+        ${cornerMarks}
+        <div style="position:absolute;inset:0;padding:80px;display:flex;align-items:center;gap:80px;">
+          <div style="flex:1;display:flex;flex-direction:column;">
+            <div style="font-family:'Geist Mono';font-size:13px;color:${ACCENT};letter-spacing:0.28em;text-transform:uppercase;margin-bottom:28px;display:flex;align-items:center;gap:12px;">
+              <span>›</span><span>open source · v1.0</span>
+            </div>
+            <h1 style="font-size:96px;font-weight:600;letter-spacing:-0.04em;margin:0;line-height:0.95;">PrimeVault</h1>
+            <p style="font-size:24px;color:#a8b3a8;line-height:1.4;margin:20px 0 36px;max-width:520px;font-weight:400;">A local-only, zero-knowledge vault for the secrets you'd rather not paste into Notes.</p>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;max-width:540px;">${pills}</div>
+            <div style="margin-top:44px;font-family:'Geist Mono';font-size:14px;color:#7d8a7d;display:flex;align-items:center;gap:10px;">
+              <span style="color:${ACCENT};">↳</span><span>github.com/prime0x2/PrimeVault</span>
+            </div>
+          </div>
+          <div style="width:360px;height:360px;position:relative;display:flex;align-items:center;justify-content:center;">
+            <div style="position:absolute;inset:0;background:radial-gradient(circle, rgba(120,255,150,0.2) 0%, transparent 60%);filter:blur(40px);"></div>
+            <svg width="360" height="360" viewBox="0 0 360 360" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;">
+              <circle cx="180" cy="180" r="170" stroke="rgba(120,255,150,0.08)" stroke-width="1" fill="none" />
+              <circle cx="180" cy="180" r="140" stroke="rgba(120,255,150,0.06)" stroke-width="1" fill="none" stroke-dasharray="3 6" />
+            </svg>
+            ${dialMark(280, 'rgba(230,240,230,0.85)', ACCENT)}
+          </div>
+        </div>
+        <div style="position:absolute;left:0;right:0;bottom:0;padding:16px 80px;border-top:1px solid rgba(120,255,150,0.10);display:flex;justify-content:space-between;font-family:'Geist Mono';font-size:12px;color:#525c52;letter-spacing:0.16em;text-transform:uppercase;">
+          <span>your secrets · your machine · your keys</span><span>chrome extension</span>
+        </div>
+      </div>`;
+  } else {
+    const pills = features.map((f) =>
+      `<span style="font-size:13px;padding:6px 12px;border:1px solid rgba(0,0,0,0.12);background:rgba(0,0,0,0.02);color:#3a3a3a;border-radius:999px;font-weight:500;">${f}</span>`
+    ).join('');
+
+    html = `
+      <div style="width:1280px;height:640px;background:#fefefe;position:relative;overflow:hidden;color:${LIGHT_INK};">
+        <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(0,0,0,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.04) 1px, transparent 1px);background-size:64px 64px;-webkit-mask-image:radial-gradient(ellipse at 75% 50%, black 0%, transparent 70%);mask-image:radial-gradient(ellipse at 75% 50%, black 0%, transparent 70%);"></div>
+        <div style="position:absolute;inset:0;padding:80px;display:flex;align-items:center;gap:80px;">
+          <div style="flex:1;">
+            <div style="font-family:'Geist Mono';font-size:12px;color:${EMBER};letter-spacing:0.28em;text-transform:uppercase;margin-bottom:28px;font-weight:500;">Open source · v1.0</div>
+            <h1 style="font-size:96px;font-weight:600;letter-spacing:-0.04em;margin:0;line-height:0.95;color:${LIGHT_INK};">PrimeVault</h1>
+            <p style="font-size:24px;color:#5c5c5c;line-height:1.4;margin:20px 0 36px;max-width:520px;font-weight:400;">A local-only, zero-knowledge vault for API keys, tokens, and the secrets you'd rather not paste into Notes.</p>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;max-width:540px;">${pills}</div>
+            <div style="margin-top:44px;font-family:'Geist Mono';font-size:14px;color:#7a7a7a;display:flex;align-items:center;gap:10px;">
+              <span style="color:${EMBER};">↳</span><span>github.com/prime0x2/PrimeVault</span>
+            </div>
+          </div>
+          <div style="width:360px;height:360px;border-radius:50%;background:${EMBER};display:flex;align-items:center;justify-content:center;position:relative;box-shadow:0 30px 80px -20px rgba(219,92,57,0.5);">
+            <svg width="360" height="360" viewBox="0 0 360 360" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;">
+              <circle cx="180" cy="180" r="178" stroke="rgba(255,255,255,0.18)" stroke-width="1" fill="none" />
+              <circle cx="180" cy="180" r="155" stroke="rgba(255,255,255,0.12)" stroke-width="1" fill="none" stroke-dasharray="3 6" />
+            </svg>
+            ${dialMark(260, 'rgba(255,255,255,0.95)', '#ffffff')}
+          </div>
+        </div>
+        <div style="position:absolute;left:0;right:0;bottom:0;padding:16px 80px;border-top:1px solid rgba(0,0,0,0.06);display:flex;justify-content:space-between;font-size:12px;color:#9a9a9a;letter-spacing:0.16em;text-transform:uppercase;font-weight:500;">
+          <span>your secrets · your machine · your keys</span><span>chrome extension</span>
+        </div>
+      </div>`;
+  }
+
+  document.getElementById('root').innerHTML = html;
+
+  // Wait for fonts before signaling ready, otherwise the screenshot can
+  // capture system fallbacks before Geist swaps in.
+  document.fonts.ready.then(() => {
+    requestAnimationFrame(() => { document.body.dataset.ready = 'true'; });
+  });
+</script>
+</body>
+</html>

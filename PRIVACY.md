@@ -1,6 +1,6 @@
 # PrimeVault Privacy Policy
 
-_Last updated: 2026-05-05_
+_Last updated: 2026-05-07_
 
 ## Summary
 
@@ -15,7 +15,7 @@ If you only read one line, that is the line.
 PrimeVault stores the following on your device, in `chrome.storage.local`:
 
 1. **Your encrypted vault** — every entry's name, value, notes, tags, type, and expiry. Encrypted with AES-256-GCM under a key derived from your master password (PBKDF2-SHA256, 600,000 iterations). The master password itself is never stored.
-2. **Your preferences** — theme, accent color, auto-lock duration, clipboard-clear duration, default entry type, shortcut hint visibility. Not encrypted; preferences are not secret.
+2. **Your preferences** — theme, auto-lock duration, clipboard-clear duration, default entry type. Not encrypted; preferences are not secret.
 
 Neither of these leaves your device. There is no remote server, no analytics endpoint, no error reporter, no telemetry.
 

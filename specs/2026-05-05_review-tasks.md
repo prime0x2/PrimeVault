@@ -10,7 +10,7 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done · `[—]` consciously def
 
 ---
 
-## P0 — Pre-submission blockers (do before v0.1.0)
+## P0 — Pre-submission blockers (do before v1.0.0)
 
 These are the items the reviewer flagged as "fix before clicking submit." Plus the Hard-Truth section's listing-copy tightening, which is also pre-submission because it's what Chrome reviewers read.
 
@@ -130,7 +130,7 @@ These are the heaviest items. None are pre-submission; all are listed so they do
 
 ## Execution plan
 
-1. **P0** — required for v0.1.0 submission. Do these first.
+1. **P0** — required for v1.0.0 submission. Do these first.
 2. **P1** — knock out in one sitting; mostly comments and small files.
 3. **P2.1 + P2.2** — coverage expansion + AAD test (pure additions, no risk).
 4. **P3.1** — `noUncheckedIndexedAccess`. Fixes will surface narrowing bugs we want flushed before refactors.
@@ -142,4 +142,4 @@ These are the heaviest items. None are pre-submission; all are listed so they do
 10. **P3.2 / P3.3** — strictness round 2, after the dust settles.
 11. **P7 / P9** — explicitly deferred to a v0.2 sprint plan.
 
-When P0–P6 are done we cut **v0.1.0** and submit. P7+ become the v0.2 backlog.
+When P0–P6 are done we cut **v1.0.0** and submit. P7+ become the v1.1 backlog.

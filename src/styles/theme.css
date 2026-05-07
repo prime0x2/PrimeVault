@@ -1,105 +1,283 @@
 /*
- * Shared theme tokens for popup + options. Imported by each entrypoint's
- * style.css after `@import "tailwindcss"`. Keeping these in one place means
- * a palette tweak doesn't have to be applied twice.
+ * PrimeVault — themes.
  *
- * Layout/sizing rules (popup width/height, options full-tab body) stay in
- * each entrypoint's own style.css since they aren't shared.
+ * Two visual identities, swapped via the root class:
+ *   - Default / .dark — Direction B (Terminal). Phosphor green on a deep
+ *     warm-black surface. Geist sans + Geist Mono. The hacker terminal.
+ *   - .light — Direction C (Calm). Ember orange on near-white. Sans only;
+ *     `--font-mono` aliases to `--font-sans` so any existing `font-mono`
+ *     utility renders sans automatically.
+ *
+ * applyTheme (lib/theme.ts) puts `.dark` for explicit dark, `.light` for
+ * explicit light, and no class for `system` — letting the
+ * prefers-color-scheme media query decide.
  */
 
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --accent: oklch(0.55 0.21 285);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.985 0 0);
-  --radius: 0.5rem;
+  /* surfaces */
+  --bg: #0a0d09;
+  --bg-elev: #0f140d;
+  --bg-sunken: #06080a;
+  --bg-input: #0c100a;
+
+  /* lines */
+  --border: rgba(120, 255, 150, 0.06);
+  --border-strong: rgba(120, 255, 150, 0.14);
+  --border-accent: oklch(0.88 0.27 145 / 0.5);
+
+  /* text */
+  --text: #e6f0e6;
+  --text-dim: #7d8a7d;
+  --text-muted: #525c52;
+
+  /* accent (phosphor green) */
+  --accent: oklch(0.88 0.27 145);
+  --accent-soft: oklch(0.88 0.27 145 / 0.12);
+  --accent-deep: oklch(0.6 0.22 145);
+
+  /* signal colors */
+  --danger: oklch(0.7 0.18 25);
+  --danger-strong: oklch(0.6 0.2 25);
+  --danger-soft: oklch(0.7 0.18 25 / 0.14);
+  --danger-border: oklch(0.7 0.18 25 / 0.4);
+  --warn: oklch(0.85 0.16 85);
+  --warn-soft: oklch(0.85 0.16 85 / 0.14);
+  --warn-border: oklch(0.85 0.16 85 / 0.4);
+  --info: oklch(0.78 0.18 200);
+
+  /* shape */
+  --radius: 0.625rem;
+
+  /* type */
+  --font-sans:
+    "Geist", "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono:
+    "Geist Mono", ui-monospace, "SFMono-Regular", "JetBrains Mono", Menlo,
+    monospace;
 }
 
 /*
- * Dark mode: slate-blue tinted (hue 265). Subtle chroma keeps the surface
- * from feeling like flat black while staying calm enough for long sessions.
- * Foreground stays neutral off-white so text contrast doesn't tilt blue.
- * Border uses a translucent overlay so it adapts if we ever swap the
- * background lightness.
+ * Tailwind v4: expose CSS vars as theme tokens so utilities like
+ * `bg-bg-elev`, `text-accent`, `border-border-strong`, `font-mono` work.
+ * Backward-compat aliases (muted/destructive/foreground/...) cover any
+ * stragglers from the pre-rebrand class names.
  */
-@media (prefers-color-scheme: dark) {
-  :root:not(.light) {
-    --background: oklch(0.16 0.012 265);
-    --foreground: oklch(0.97 0 0);
-    --card: oklch(0.21 0.015 265);
-    --card-foreground: oklch(0.97 0 0);
-    --primary: oklch(0.97 0 0);
-    --primary-foreground: oklch(0.21 0.015 265);
-    --muted: oklch(0.27 0.018 265);
-    --muted-foreground: oklch(0.71 0.015 265);
-    --border: oklch(0.23 0.012 265);
-    --input: oklch(0.28 0.015 265);
-    --ring: oklch(0.55 0.05 265);
-    --accent: oklch(0.7 0.19 285);
-    --accent-foreground: oklch(0.21 0.015 265);
-    --destructive: oklch(0.704 0.191 22.216);
-    --destructive-foreground: oklch(0.97 0 0);
-  }
-}
-
-:root.dark {
-  --background: oklch(0.16 0.012 265);
-  --foreground: oklch(0.97 0 0);
-  --card: oklch(0.21 0.015 265);
-  --card-foreground: oklch(0.97 0 0);
-  --primary: oklch(0.97 0 0);
-  --primary-foreground: oklch(0.21 0.015 265);
-  --muted: oklch(0.27 0.018 265);
-  --muted-foreground: oklch(0.71 0.015 265);
-  --border: oklch(0.23 0.012 265);
-  --input: oklch(0.28 0.015 265);
-  --ring: oklch(0.55 0.05 265);
-  --accent: oklch(0.7 0.19 285);
-  --accent-foreground: oklch(0.21 0.015 265);
-  --destructive: oklch(0.704 0.191 22.216);
-  --destructive-foreground: oklch(0.97 0 0);
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
+  --color-bg: var(--bg);
+  --color-bg-elev: var(--bg-elev);
+  --color-bg-sunken: var(--bg-sunken);
+  --color-bg-input: var(--bg-input);
+
+  --color-border-default: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-border-accent: var(--border-accent);
+
+  --color-text: var(--text);
+  --color-text-dim: var(--text-dim);
+  --color-text-muted: var(--text-muted);
+
   --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-deep: var(--accent-deep);
+
+  --color-danger: var(--danger);
+  --color-danger-strong: var(--danger-strong);
+  --color-danger-soft: var(--danger-soft);
+  --color-danger-border: var(--danger-border);
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
+  --color-warn-border: var(--warn-border);
+  --color-info: var(--info);
+
+  /* shadcn-era aliases — kept so a missed class name still renders sanely */
+  --color-background: var(--bg);
+  --color-foreground: var(--text);
+  --color-muted: var(--bg-elev);
+  --color-muted-foreground: var(--text-dim);
+  --color-card: var(--bg-elev);
+  --color-card-foreground: var(--text);
+  --color-primary: var(--accent);
+  --color-primary-foreground: var(--bg);
+  --color-input: var(--border-strong);
+  --color-ring: var(--accent);
+  --color-destructive: var(--danger);
+  --color-destructive-foreground: var(--text);
+
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
 }
 
 html,
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family:
-    ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Roboto, "Helvetica Neue", Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-feature-settings: "ss01", "cv11";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/*
+ * Direction C (Calm) — light palette. Defined once on :root with
+ * `--l-*` aliases so the two activation paths (explicit `.light` class +
+ * `prefers-color-scheme: light` without an explicit `.dark` class) stay
+ * structurally identical and can't drift. Each path just re-points
+ * `--bg`, `--text`, etc. at the `--l-*` values.
+ */
+:root {
+  --l-bg: #fefefe;
+  --l-bg-elev: #ffffff;
+  --l-bg-sunken: #f7f6f4;
+  --l-bg-input: #ffffff;
+
+  --l-border: rgba(0, 0, 0, 0.07);
+  --l-border-strong: rgba(0, 0, 0, 0.13);
+  --l-border-accent: rgba(219, 92, 57, 0.45);
+
+  --l-text: #1a1a1a;
+  --l-text-dim: #6b6b6b;
+  --l-text-muted: #9a9a9a;
+
+  --l-accent: #db5c39;
+  --l-accent-soft: rgba(219, 92, 57, 0.1);
+  --l-accent-deep: #b84a2c;
+
+  /* OKLCH stays legible on a near-white surface */
+  --l-danger: oklch(0.55 0.2 25);
+  --l-danger-strong: oklch(0.48 0.22 25);
+  --l-danger-soft: oklch(0.55 0.2 25 / 0.1);
+  --l-danger-border: oklch(0.55 0.2 25 / 0.35);
+  --l-warn: oklch(0.65 0.18 65);
+  --l-warn-soft: oklch(0.65 0.18 65 / 0.12);
+  --l-warn-border: oklch(0.65 0.18 65 / 0.4);
+  --l-info: oklch(0.55 0.18 240);
+}
+
+/*
+ * `@apply-light` is the single block both activation paths re-use. Tailwind v4
+ * doesn't support real CSS @mixin so we duplicate this `&` block — but only as
+ * pointer reassignments, not as palette literals. If you add a token, add one
+ * line in *both* places below.
+ */
+:root.light {
+  --bg: var(--l-bg);
+  --bg-elev: var(--l-bg-elev);
+  --bg-sunken: var(--l-bg-sunken);
+  --bg-input: var(--l-bg-input);
+  --border: var(--l-border);
+  --border-strong: var(--l-border-strong);
+  --border-accent: var(--l-border-accent);
+  --text: var(--l-text);
+  --text-dim: var(--l-text-dim);
+  --text-muted: var(--l-text-muted);
+  --accent: var(--l-accent);
+  --accent-soft: var(--l-accent-soft);
+  --accent-deep: var(--l-accent-deep);
+  --danger: var(--l-danger);
+  --danger-strong: var(--l-danger-strong);
+  --danger-soft: var(--l-danger-soft);
+  --danger-border: var(--l-danger-border);
+  --warn: var(--l-warn);
+  --warn-soft: var(--l-warn-soft);
+  --warn-border: var(--l-warn-border);
+  --info: var(--l-info);
+  /* Calm direction is sans-only — every `font-mono` utility resolves to
+     the sans family so the terminal feel disappears without touching
+     any component class names. */
+  --font-mono: var(--font-sans);
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not(.dark) {
+    --bg: var(--l-bg);
+    --bg-elev: var(--l-bg-elev);
+    --bg-sunken: var(--l-bg-sunken);
+    --bg-input: var(--l-bg-input);
+    --border: var(--l-border);
+    --border-strong: var(--l-border-strong);
+    --border-accent: var(--l-border-accent);
+    --text: var(--l-text);
+    --text-dim: var(--l-text-dim);
+    --text-muted: var(--l-text-muted);
+    --accent: var(--l-accent);
+    --accent-soft: var(--l-accent-soft);
+    --accent-deep: var(--l-accent-deep);
+    --danger: var(--l-danger);
+    --danger-strong: var(--l-danger-strong);
+    --danger-soft: var(--l-danger-soft);
+    --danger-border: var(--l-danger-border);
+    --warn: var(--l-warn);
+    --warn-soft: var(--l-warn-soft);
+    --warn-border: var(--l-warn-border);
+    --info: var(--l-info);
+    --font-mono: var(--font-sans);
+    color-scheme: light;
+  }
+}
+
+:root.dark {
+  color-scheme: dark;
+}
+
+/*
+ * Theme-gated visibility for the Terminal flourishes (`›` eyebrows, the
+ * TerminalInput `$` prefix, etc). `.terminal-only` is hidden in light
+ * (the Calm direction has no command-line metaphors). Mirror class
+ * `.calm-only` exists for symmetry — currently unused but reserved.
+ */
+:root.light .terminal-only,
+:root.dark .calm-only {
+  display: none;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not(.dark) .terminal-only {
+    display: none;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) .calm-only {
+    display: none;
+  }
+}
+
+/*
+ * Scrollbars — phosphor-aware, calm in rest, accent on hover.
+ * Firefox uses the standard properties; Chromium/WebKit gets the
+ * fuller treatment via the ::-webkit-scrollbar pseudo-elements.
+ */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 999px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-soft);
+}
+
+*::-webkit-scrollbar-corner {
+  background: transparent;
 }

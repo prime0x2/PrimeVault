@@ -1,84 +1,100 @@
 /**
- * Icon-button cluster for an EntryRow: reveal/mask, copy, delete. Pulled
- * out of EntryRow to keep the row layout focused on layout — the action
- * cluster has its own ergonomics (entry-name-included aria labels per
- * SPEC §10.10, busy-state disabling) that benefit from being one
- * component.
+ * Direction B: row actions are copy + trash. Reveal was dropped earlier —
+ * masked values are often longer than the row's width, so the inline copy is
+ * the real action; details/edit lives in the expand panel.
  */
 
-import { Check, Copy, Eye, EyeOff, Trash2 } from 'lucide-react';
-import { Button } from '../../components/ui/button';
+import { IconButton } from '../../components/terminal';
 
 interface RowActionsProps {
   entryName: string;
-  revealed: boolean;
   busy: boolean;
   copyFlash: boolean;
-  onReveal: () => void;
-  onMask: () => void;
   onCopy: () => void;
   onRequestDelete: () => void;
 }
 
 export function RowActions({
   entryName,
-  revealed,
   busy,
   copyFlash,
-  onReveal,
-  onMask,
   onCopy,
   onRequestDelete,
 }: RowActionsProps): React.ReactElement {
   return (
-    <div className="flex items-center gap-0.5">
-      <Button
-        type="button"
-        variant="ghost"
-        size="icon"
-        className="h-7 w-7"
-        onClick={revealed ? onMask : onReveal}
-        aria-label={
-          revealed
-            ? `Hide value for ${entryName}`
-            : `Reveal value for ${entryName}`
-        }
-        title={revealed ? 'Hide' : 'Reveal'}
-      >
-        {revealed ? (
-          <EyeOff className="h-3.5 w-3.5" />
-        ) : (
-          <Eye className="h-3.5 w-3.5" />
-        )}
-      </Button>
-      <Button
-        type="button"
-        variant="ghost"
-        size="icon"
-        className="h-7 w-7"
+    <div className="flex items-center gap-0">
+      <IconButton
         onClick={onCopy}
         disabled={busy}
         aria-label={`Copy value for ${entryName}`}
         title="Copy"
+        className="h-6.5 w-6.5 rounded-md"
       >
         {copyFlash ? (
-          <Check className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 16 16"
+            fill="none"
+            aria-hidden="true"
+            style={{ color: 'var(--accent)' }}
+          >
+            <path
+              d="M3 8.5l3.5 3.5L13 5"
+              stroke="currentColor"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
         ) : (
-          <Copy className="h-3.5 w-3.5" />
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 16 16"
+            fill="none"
+            aria-hidden="true"
+          >
+            <rect
+              x="5"
+              y="5"
+              width="8"
+              height="8"
+              rx="1.5"
+              stroke="currentColor"
+              strokeWidth="1.3"
+            />
+            <path
+              d="M3.5 10.5V4a1 1 0 0 1 1-1H10"
+              stroke="currentColor"
+              strokeWidth="1.3"
+              strokeLinecap="round"
+            />
+          </svg>
         )}
-      </Button>
-      <Button
-        type="button"
-        variant="ghost"
-        size="icon"
-        className="h-7 w-7 text-muted-foreground hover:text-destructive"
+      </IconButton>
+      <IconButton
         onClick={onRequestDelete}
         disabled={busy}
         aria-label={`Delete ${entryName}`}
         title="Delete"
+        className="h-6.5 w-6.5 rounded-md hover:text-(--danger)"
       >
-        <Trash2 className="h-3.5 w-3.5" />
-      </Button>
+        <svg
+          width="14"
+          height="14"
+          viewBox="0 0 16 16"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="M3 5h10M6.5 5V3.5h3V5M5 5v8a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1V5"
+            stroke="currentColor"
+            strokeWidth="1.3"
+            strokeLinecap="round"
+          />
+        </svg>
+      </IconButton>
     </div>
   );
 }

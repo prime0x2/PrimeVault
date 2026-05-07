@@ -123,4 +123,4 @@ After publishing, the privacy policy lives at the canonical GitHub Pages URL or 
 - [ ] `STORE_LISTING.md` reviewed
 - [ ] Permission justifications copied into the dashboard form
 - [ ] First-run flow tested in production build (`pnpm build` then load unpacked)
-- [ ] Tag the release: `git tag v0.1.0 && git push --tags`
+- [ ] Tag the release: `git tag v1.0.0 && git push --tags`

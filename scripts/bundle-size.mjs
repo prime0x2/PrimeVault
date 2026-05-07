@@ -22,7 +22,9 @@ const CHUNKS_DIR = join(OUTPUT_DIR, 'chunks');
  * `<entry>.js` for unhashed ones like `background.js`).
  */
 const BUDGETS = [
-  { label: 'popup', prefix: 'popup-', dir: CHUNKS_DIR, maxBytes: 36 * 1024 },
+  // Bumped 36 → 40 kB after the Direction C theme + filter chip work
+  // landed and parked us near the prior ceiling.
+  { label: 'popup', prefix: 'popup-', dir: CHUNKS_DIR, maxBytes: 40 * 1024 },
   {
     label: 'options',
     prefix: 'options-',

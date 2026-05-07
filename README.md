@@ -1,3 +1,8 @@
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/brand/readme-hero-dark.png">
+  <img alt="PrimeVault — a local-only, zero-knowledge vault for the secrets you'd rather not paste into Notes." src="docs/brand/readme-hero-light.png">
+</picture>
+
 # PrimeVault
 
 > Encrypted Chrome extension vault for API keys & tokens. Zero-knowledge, open source, lives in your toolbar.
@@ -17,14 +22,15 @@ Full design and threat model: [`specs/2026-05-04_spec.md`](./specs/2026-05-04_sp
 
 ## Status
 
-**v0.0.0 — pre-submission.** Phases 1–13 complete (skeleton, crypto, storage, messaging, onboarding, unlock, vault list, edit, search, options, backup, CI, polish). Phase 14 is submission prep; Phase 15 is the actual store submission. See [`specs/2026-05-04_spec.md`](./specs/2026-05-04_spec.md) §18 for the build plan.
+**v1.0.0 — pre-submission.** Phases 1–13 complete (skeleton, crypto, storage, messaging, onboarding, unlock, vault list, edit, search, options, backup, CI, polish). Phase 14 is submission prep; Phase 15 is the actual store submission. See [`specs/2026-05-04_spec.md`](./specs/2026-05-04_spec.md) §18 for the build plan.
 
-245 unit tests passing. CI runs typecheck, lint, test, and build on every PR.
+275 unit tests passing. CI runs typecheck, lint, test, and build on every PR.
 
 ## Stack
 
 - [WXT](https://wxt.dev) (extension framework) + React 19 + TypeScript 5
-- Tailwind CSS v4 + shadcn-style component primitives
+- Tailwind CSS v4 + custom token-driven primitives in `src/components/{terminal,form}.tsx`
+- Two-direction theme: Direction B (Terminal — phosphor green on warm-black) for dark, Direction C (Calm — ember orange on near-white) for light. System preference is the default.
 - WebCrypto (PBKDF2-SHA256, AES-256-GCM)
 - `zxcvbn-ts` for password strength scoring (lazy-loaded; not in the steady-state popup bundle)
 - Vitest for unit tests, Biome for lint+format, pnpm for installs
@@ -95,10 +101,11 @@ See [`specs/2026-05-04_spec.md`](./specs/2026-05-04_spec.md) §14 for the full l
 src/
   entrypoints/      # popup, options, background SW, offscreen doc
   features/         # unlock, vault, options, backup, passwords
-  components/ui/    # shadcn-style primitives
+  components/       # terminal.tsx (popup atoms), form.tsx (options primitives)
   crypto/           # PBKDF2 + AES-GCM + envelope
   storage/          # client + vault + prefs + migrations + schema
-  messaging/        # protocol + client + server + clipboard scheduler
+  messaging/        # protocol + client + server + session + clipboard
+  styles/           # theme.css — CSS-var palette + direction switch
   lib/              # ulid, tags, theme, cn
 tests/              # mirrors src/, vitest unit tests
 .github/workflows/  # CI

@@ -5,6 +5,9 @@
 
 export type ExpiryUrgency = 'expired' | 'soon' | 'ok';
 
+/** A user-selectable filter on entry expiry — `null` means no filter. */
+export type ExpiryFilter = Exclude<ExpiryUrgency, 'ok'> | null;
+
 export const EXPIRY_WARNING_DAYS = 14;
 
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
