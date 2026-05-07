@@ -47,6 +47,7 @@ export function createEntryMethods(core: SessionCore): EntryMethods {
       tags: normalizeTags(input.tags ?? []),
       // 'secret' is the neutral catchall; user can refine via the kind picker.
       kind: input.kind ?? 'secret',
+      ...(input.scope ? { scope: input.scope } : {}),
       ...(input.expiresAt ? { expiresAt: input.expiresAt } : {}),
       createdAt: ts,
       updatedAt: ts,
@@ -106,6 +107,11 @@ export function createEntryMethods(core: SessionCore): EntryMethods {
       delete (updated as { expiresAt?: string }).expiresAt;
     } else if (typeof input.expiresAt === 'string') {
       updated.expiresAt = input.expiresAt;
+    }
+    if (input.scope === null) {
+      delete (updated as { scope?: Entry['scope'] }).scope;
+    } else if (input.scope !== undefined) {
+      updated.scope = input.scope;
     }
 
     const entries = plaintext.entries.slice();
