@@ -92,7 +92,7 @@ jobs:
           echo "Found: ${ZIP_PATH}"
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           # Tag name is taken from the trigger; no need to pass tag_name.
           name: ${{ github.ref_name }}
