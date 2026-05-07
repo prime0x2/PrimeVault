@@ -53,7 +53,8 @@
       },
       "correctness": {
         "useExhaustiveDependencies": "error",
-        "useHookAtTopLevel": "error"
+        "useHookAtTopLevel": "error",
+        "noUnusedImports": "error"
       },
       "a11y": {
         "noSvgWithoutTitle": "off"

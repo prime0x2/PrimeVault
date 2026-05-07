@@ -13,7 +13,7 @@
  *   docs/brand/social-{dark,light}.png   ← 1280×640 GitHub social preview
  *   docs/brand/readme-hero-{dark,light}.png ← 1280×360 README banner
  */
-import { mkdir, rm } from 'node:fs/promises';
+import { mkdir } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { chromium } from '@playwright/test';
