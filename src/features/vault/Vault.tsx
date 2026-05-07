@@ -91,11 +91,17 @@ export function Vault({ onLocked, expiresAt }: VaultProps): React.ReactElement {
     setLocking(true);
     try {
       await popupClient.send({ kind: 'lock' });
-    } finally {
+    } catch (err) {
       // Fail-safe: even if the SW lock message itself errors (eviction race,
       // transient transport failure), the popup still routes to the locked
       // state. The SW's source of truth is its in-memory key, and a
       // locked-looking UI is strictly safer than a stuck "locking…".
+      // Swallow the error after a console.warn so DevTools still sees it.
+      console.warn(
+        '[primevault] lock RPC failed; routing to locked anyway',
+        err,
+      );
+    } finally {
       setLocking(false);
       onLocked();
     }

@@ -27,6 +27,11 @@ web-ext.config.ts
 coverage
 .nyc_output
 
+# Playwright artifacts (E2E layer, see e2e/ + playwright.config.ts)
+playwright-report
+test-results
+.playwright
+
 # Environment
 .env
 .env.local
