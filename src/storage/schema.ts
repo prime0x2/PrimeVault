@@ -11,14 +11,18 @@
 import { z } from 'zod';
 
 export const ENTRY_KINDS = [
+  'secret',
   'api_key',
   'token',
   'password',
-  'secret',
   'other',
 ] as const;
 
 export type EntryKind = (typeof ENTRY_KINDS)[number];
+
+export const ENTRY_SCOPES = ['personal', 'work'] as const;
+
+export type EntryScope = (typeof ENTRY_SCOPES)[number];
 
 const isoDateTimePattern = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z$/;
 const isoDateOnlyPattern = /^\d{4}-\d{2}-\d{2}$/;
@@ -35,6 +39,7 @@ export const entrySchema = z.object({
   notes: z.string().max(2000).optional(),
   tags: z.array(z.string().min(1).max(24)).max(10),
   kind: z.enum(ENTRY_KINDS),
+  scope: z.enum(ENTRY_SCOPES).optional(),
   expiresAt: isoDateOnly.optional(),
   createdAt: isoDateTime,
   updatedAt: isoDateTime,

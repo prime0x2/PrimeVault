@@ -16,7 +16,7 @@
 
 import { z } from 'zod';
 import { type Envelope, envelopeSchema } from '../crypto/envelope';
-import { ENTRY_KINDS, type Entry } from '../storage/schema';
+import { ENTRY_KINDS, ENTRY_SCOPES, type Entry } from '../storage/schema';
 
 export const vaultStatusSchema = z.discriminatedUnion('state', [
   z.object({ state: z.literal('uninitialized') }),
@@ -54,6 +54,7 @@ export const entryInputSchema = z.object({
   notes: z.union([z.string().max(2000), z.null()]).optional(),
   tags: z.array(z.string().min(1).max(24)).max(10).optional(),
   kind: z.enum(ENTRY_KINDS).optional(),
+  scope: z.union([z.enum(ENTRY_SCOPES), z.null()]).optional(),
   expiresAt: z
     .union([z.string().regex(/^\d{4}-\d{2}-\d{2}$/), z.null()])
     .optional(),
