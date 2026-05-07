@@ -1,7 +1,18 @@
 @import "tailwindcss";
 @import "../../styles/theme.css";
 
-/* Geist webfonts (Direction B). Each weight ~12KB woff2. */
+/*
+ * Geist webfonts. Each weight ~12KB woff2.
+ *
+ * Mono is only rendered in the Terminal direction (dark / system+dark) —
+ * in Calm (light), `--font-mono` aliases to `--font-sans` so any
+ * `font-mono` utility falls back to sans, and these woff2 files are
+ * fetched but never painted. Keeping them here costs ~24KB on the first
+ * load for light-theme users; conditional loading via JS would save it
+ * but at the cost of a one-frame font swap when the theme flips. The
+ * fonts are aggressively cached after first paint, so the trade-off
+ * favors consistency over the cold-start savings.
+ */
 @import "@fontsource/geist-sans/400.css";
 @import "@fontsource/geist-sans/500.css";
 @import "@fontsource/geist-sans/600.css";

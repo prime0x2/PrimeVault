@@ -1,15 +1,69 @@
 /*
- * Direction B — Terminal atoms.
+ * Brand atoms shared by both directions.
  *
  * One file, no shadcn, no CVA — just the small set of primitives the
  * design uses repeatedly. Tailwind for layout, CSS vars (theme.css) for
- * color, inline SVG for the dial mark and footer icons.
+ * color, inline SVG for marks and icons.
+ *
+ * BrandMark / BrandMarkLarge render both the Dial (Direction B) and the
+ * Keyhole (Direction C) and let theme.css's `.terminal-only` /
+ * `.calm-only` rules show the right one. Direct DialMark / KeyholeMark
+ * exports remain available if a screen needs to force a specific mark.
  */
 
 import * as React from 'react';
 import { cn } from '../lib/cn';
 
-// ───── Dial mark — small (header) ──────────────────────────────────────────
+// ───── Brand mark — small (header) ─────────────────────────────────────────
+
+/**
+ * Renders both the Dial (Direction B) and Keyhole (Direction C) marks;
+ * `theme.css`'s `.terminal-only` / `.calm-only` rules show only the
+ * active one.
+ *
+ * `className` is applied to *both* internal spans. Only one is ever
+ * visible (`display: none` on the other), so practically only one
+ * applies — but keep `className` to color/styling utilities, not layout
+ * classes (`mr-3`, `w-fit`), or you'll get surprises if the visibility
+ * model ever changes.
+ */
+export function BrandMark({
+  size = 22,
+  className,
+}: {
+  size?: number;
+  className?: string;
+}): React.ReactElement {
+  return (
+    <>
+      <span className={cn('terminal-only inline-flex', className)}>
+        <DialMark size={size} />
+      </span>
+      <span className={cn('calm-only inline-flex', className)}>
+        <KeyholeMark size={size} />
+      </span>
+    </>
+  );
+}
+
+export function BrandMarkLarge({
+  size = 84,
+}: {
+  size?: number;
+}): React.ReactElement {
+  return (
+    <>
+      <span className="terminal-only inline-flex">
+        <DialMarkLarge size={size} />
+      </span>
+      <span className="calm-only inline-flex">
+        <KeyholeMarkLarge size={size} />
+      </span>
+    </>
+  );
+}
+
+// ───── Direction B — Dial mark ─────────────────────────────────────────────
 export function DialMark({
   size = 22,
   className,
@@ -56,7 +110,60 @@ export function DialMark({
   );
 }
 
-// ───── Dial mark — large (hero on unlock / empty) ──────────────────────────
+// ───── Direction C — Keyhole mark (small) ──────────────────────────────────
+export function KeyholeMark({
+  size = 22,
+  className,
+}: {
+  size?: number;
+  className?: string;
+}): React.ReactElement {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 28 28"
+      fill="none"
+      className={className}
+      aria-hidden
+    >
+      <circle
+        cx="14"
+        cy="14"
+        r="11.5"
+        stroke="currentColor"
+        strokeWidth="1.4"
+      />
+      <circle cx="14" cy="12" r="2.2" fill="var(--accent)" />
+      <path d="M13.3 13.5h1.4l-.4 4h-.6l-.4-4Z" fill="var(--accent)" />
+    </svg>
+  );
+}
+
+// ───── Direction C — Keyhole mark (large hero) ─────────────────────────────
+export function KeyholeMarkLarge({
+  size = 84,
+}: {
+  size?: number;
+}): React.ReactElement {
+  return (
+    <svg width={size} height={size} viewBox="0 0 80 80" fill="none" aria-hidden>
+      <circle cx="40" cy="40" r="34" stroke="currentColor" strokeWidth="1.6" />
+      <circle
+        cx="40"
+        cy="40"
+        r="28"
+        stroke="currentColor"
+        strokeWidth="0.8"
+        opacity="0.35"
+      />
+      <circle cx="40" cy="34" r="5.5" fill="var(--accent)" />
+      <path d="M38.2 38h3.6l-1 11h-1.6l-1-11Z" fill="var(--accent)" />
+    </svg>
+  );
+}
+
+// ───── Direction B — Dial mark (large hero) ────────────────────────────────
 export function DialMarkLarge({
   size = 84,
 }: {
@@ -283,7 +390,7 @@ export const TerminalInput = React.forwardRef<
       )}
     >
       <span
-        className="mr-2.5 select-none font-mono text-[13px] text-accent"
+        className="terminal-only mr-2.5 select-none font-mono text-[13px] text-accent"
         aria-hidden
       >
         {prefix}
@@ -381,7 +488,7 @@ export function PopupShell({
   );
 }
 
-// ───── Brand header — DialMark + name + optional status pill ───────────────
+// ───── Brand header — BrandMark + name + optional status pill ─────────────
 export function BrandHeader({
   status,
   statusColor,
@@ -392,7 +499,7 @@ export function BrandHeader({
   return (
     <div className="flex shrink-0 items-center justify-between px-[18px] py-3.5">
       <div className="flex items-center gap-2.5">
-        <DialMark size={22} className="text-text" />
+        <BrandMark size={22} className="text-text" />
         <span className="font-semibold text-[14px] text-text tracking-tight">
           PrimeVault
         </span>

@@ -11,7 +11,6 @@ import { useCopy } from './useCopy';
 interface EntryRowProps {
   entry: Entry;
   expanded: boolean;
-  selected: boolean;
   onToggleExpand: () => void;
   onRequestEdit: () => void;
   onRequestDelete: () => void;
@@ -24,7 +23,6 @@ export function EntryRow(props: EntryRowProps): React.ReactElement {
   const {
     entry,
     expanded,
-    selected,
     onToggleExpand,
     onRequestEdit,
     onRequestDelete,
@@ -46,7 +44,7 @@ export function EntryRow(props: EntryRowProps): React.ReactElement {
   });
 
   const [hovering, setHovering] = useState(false);
-  const highlight = selected || expanded || hovering;
+  const highlight = expanded || hovering;
 
   return (
     <li
@@ -84,23 +82,28 @@ export function EntryRow(props: EntryRowProps): React.ReactElement {
           </div>
           <div className="flex items-center gap-1 font-mono text-[10.5px]">
             <span className="text-text-muted">{entry.kind}</span>
+            {entry.scope !== undefined && (
+              <span className="text-text-dim">· {entry.scope}</span>
+            )}
             {entry.tags.map((t) => (
               <span key={t} className="text-text-dim">
                 · {t}
               </span>
             ))}
-            <span className="ml-auto text-text-muted">
-              {relativeTime(entry.createdAt)}
-            </span>
           </div>
         </button>
-        <RowActions
-          entryName={entry.name}
-          busy={copying}
-          copyFlash={copyFlash}
-          onCopy={copy}
-          onRequestDelete={onRequestDelete}
-        />
+        <div className="flex shrink-0 flex-col items-center gap-0.5">
+          <RowActions
+            entryName={entry.name}
+            busy={copying}
+            copyFlash={copyFlash}
+            onCopy={copy}
+            onRequestDelete={onRequestDelete}
+          />
+          <span className="font-mono text-[10.5px] text-text-muted">
+            {relativeTime(entry.createdAt)}
+          </span>
+        </div>
       </div>
 
       {copyBanner && (

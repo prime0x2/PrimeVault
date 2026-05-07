@@ -7,13 +7,12 @@
  *   • A `markUsed` ping to update lastUsedAt / copyCount on the entry.
  *   • The transient `copyFlash` icon swap (1s) and `copyBanner` text (capped
  *     at the smaller of the configured clear delay or {@link COPY_BANNER_MAX_MS}).
- *   • Honest display seconds — Chrome alarms floor anything below 30s, so
- *     the banner reflects what the user will actually experience.
  *
  * Errors from the SW round-trip are intentionally non-fatal. The clipboard
  * write itself already succeeded by the time we get there; if scheduling
  * the clear or marking the entry fails, the user has no useful action and
- * we don't want to block the UI on it.
+ * we don't want to block the UI on it. We `console.warn` so it isn't
+ * completely silent for anyone watching DevTools.
  */
 
 import { useEffect, useState } from 'react';
@@ -78,12 +77,16 @@ export function useCopy({
       const delayMs = clipboardClearSeconds * 1000;
       popupClient
         .send({ kind: 'scheduleClipboardClear', delayMs })
-        .catch(() => undefined);
+        .catch((err: unknown) => {
+          console.warn('[primevault] scheduleClipboardClear failed', err);
+        });
 
       popupClient
         .send({ kind: 'markUsed', id: entryId })
         .then(() => onCopied())
-        .catch(() => undefined);
+        .catch((err: unknown) => {
+          console.warn('[primevault] markUsed failed', err);
+        });
     } finally {
       setBusy(false);
     }

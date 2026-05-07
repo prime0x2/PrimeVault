@@ -39,7 +39,11 @@ export function relativeTime(iso: string, now: number = Date.now()): string {
   return `${y}y ago`;
 }
 
-const KIND_DOT_COLOR: Record<string, string> = {
+import type { EntryKind } from '../../storage/schema';
+
+// Keyed by EntryKind so adding a new kind triggers a TS error here until
+// a color is assigned, instead of silently falling through to text-dim.
+const KIND_DOT_COLOR: Record<EntryKind, string> = {
   api_key: 'var(--accent)',
   token: 'var(--info)',
   password: 'oklch(0.78 0.18 320)',
@@ -47,6 +51,6 @@ const KIND_DOT_COLOR: Record<string, string> = {
   other: 'var(--text-dim)',
 };
 
-export function kindDotColor(kind: string): string {
-  return KIND_DOT_COLOR[kind] ?? 'var(--text-dim)';
+export function kindDotColor(kind: EntryKind): string {
+  return KIND_DOT_COLOR[kind];
 }

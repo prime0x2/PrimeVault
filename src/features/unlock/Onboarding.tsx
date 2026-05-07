@@ -1,4 +1,5 @@
 import { useEffect, useId, useRef, useState } from 'react';
+import { browser } from 'wxt/browser';
 import {
   BrandHeader,
   PopupFooter,
@@ -15,6 +16,10 @@ import {
   scorePassword,
 } from './strength';
 import { validateSetup } from './validation';
+
+// Read once at module load — the manifest is static for the lifetime of
+// the popup, and getManifest() is synchronous.
+const VERSION = browser.runtime.getManifest().version;
 
 const SCORE_DEBOUNCE_MS = 250;
 
@@ -112,7 +117,7 @@ export function Onboarding({ onCreated }: OnboardingProps): React.ReactElement {
       footer={
         <PopupFooter>
           <span>local-only · zero-knowledge</span>
-          <span>v1.0.0</span>
+          <span>v{VERSION}</span>
         </PopupFooter>
       }
     >
@@ -121,7 +126,7 @@ export function Onboarding({ onCreated }: OnboardingProps): React.ReactElement {
         className="flex flex-1 flex-col px-[22px] pt-6 pb-[18px]"
         aria-label="Create your master password"
       >
-        <div className="mb-2.5 font-mono text-[11px] text-text-muted">
+        <div className="terminal-only mb-2.5 font-mono text-[11px] text-text-muted">
           <span className="text-accent">›</span> init vault
         </div>
         <h1 className="mb-2.5 font-semibold text-[26px] leading-[1.15] tracking-[-0.025em]">
@@ -203,8 +208,13 @@ export function Onboarding({ onCreated }: OnboardingProps): React.ReactElement {
         <PrimaryButton type="submit" disabled={!validation.ok || submitting}>
           {submitting ? 'creating vault…' : 'Create vault'}
         </PrimaryButton>
-        <p className="mt-2.5 text-center font-mono text-[10.5px] text-text-muted">
-          password.never_leaves(this.device)
+        <p className="mt-2.5 text-center text-[10.5px] text-text-muted">
+          <span className="terminal-only font-mono">
+            password.never_leaves(this.device)
+          </span>
+          <span className="calm-only">
+            Your password never leaves this device.
+          </span>
         </p>
       </form>
     </PopupShell>

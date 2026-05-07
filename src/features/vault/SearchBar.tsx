@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react';
-import { Kbd } from '../../components/terminal';
 import { cn } from '../../lib/cn';
 
 interface SearchBarProps {
@@ -45,11 +44,27 @@ export function SearchBar({
         )}
       >
         <span
-          className="mr-2.5 select-none font-mono text-[14px] text-accent"
+          className="terminal-only mr-2.5 select-none font-mono text-[14px] text-accent"
           aria-hidden
         >
           ›
         </span>
+        <svg
+          className="calm-only mr-2.5 shrink-0 text-text-muted"
+          width="14"
+          height="14"
+          viewBox="0 0 14 14"
+          fill="none"
+          aria-hidden
+        >
+          <circle cx="6" cy="6" r="4" stroke="currentColor" strokeWidth="1.3" />
+          <path
+            d="M9 9l3 3"
+            stroke="currentColor"
+            strokeWidth="1.3"
+            strokeLinecap="round"
+          />
+        </svg>
         <input
           ref={inputRef}
           type="text"
@@ -62,7 +77,7 @@ export function SearchBar({
           spellCheck={false}
           className="flex-1 border-0 bg-transparent font-mono text-[13px] text-text outline-none placeholder:text-text-muted"
         />
-        {value !== '' ? (
+        {value !== '' && (
           <button
             type="button"
             onClick={() => onChange('')}
@@ -79,8 +94,6 @@ export function SearchBar({
               />
             </svg>
           </button>
-        ) : (
-          <Kbd>⌘/</Kbd>
         )}
         <span
           role="status"

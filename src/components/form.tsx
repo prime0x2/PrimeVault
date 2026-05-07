@@ -123,6 +123,41 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
 );
 Select.displayName = 'Select';
 
+// ───── Inline alert — danger / warn / success variants ──────────────────
+//
+// Used by the options forms for inline error / confirmation / success
+// messages. Tokens come from theme.css so the colors swap with theme.
+
+type AlertTone = 'danger' | 'warn' | 'success';
+
+const ALERT_TONE: Record<AlertTone, string> = {
+  danger: 'border-danger-border bg-danger-soft text-danger',
+  warn: 'border-warn-border bg-warn-soft text-warn',
+  // The success tone reuses the accent (mint in dark, ember in light).
+  success: 'border-border-accent bg-accent-soft text-accent',
+};
+
+export interface AlertProps extends React.HTMLAttributes<HTMLParagraphElement> {
+  tone?: AlertTone;
+}
+
+export const Alert = React.forwardRef<HTMLParagraphElement, AlertProps>(
+  ({ className, tone = 'danger', children, ...rest }, ref) => (
+    <p
+      ref={ref}
+      className={cn(
+        'rounded-md border px-3 py-2 text-xs leading-relaxed',
+        ALERT_TONE[tone],
+        className,
+      )}
+      {...rest}
+    >
+      {children}
+    </p>
+  ),
+);
+Alert.displayName = 'Alert';
+
 // ───── Textarea ─────────────────────────────────────────────────────────
 
 export type TextareaProps = React.TextareaHTMLAttributes<HTMLTextAreaElement>;

@@ -1,13 +1,5 @@
 import { GhostButton } from '../../components/terminal';
-import type { Entry, EntryKind } from '../../storage/schema';
-
-const KIND_LABELS: Record<EntryKind, string> = {
-  api_key: 'api_key',
-  token: 'token',
-  password: 'password',
-  secret: 'secret',
-  other: 'other',
-};
+import { type Entry, KIND_LABELS } from '../../storage/schema';
 
 interface EntryDetailsProps {
   entry: Entry;
@@ -62,6 +54,7 @@ export function EntryDetails({
 
       <dl className="grid grid-cols-2 gap-x-3 gap-y-1.5 font-mono text-[10.5px]">
         <Field label="kind">{KIND_LABELS[entry.kind]}</Field>
+        <Field label="scope">{entry.scope ?? '—'}</Field>
         <Field label="expires">{formatDate(entry.expiresAt)}</Field>
         <Field label="last copied">{formatDate(entry.lastUsedAt)}</Field>
         <Field label="copies">{entry.copyCount}</Field>

@@ -15,11 +15,16 @@
 import { decryptWithKey, type Envelope, reseal } from '../crypto/envelope';
 import type { StorageBackend } from '../storage/client';
 import { migrate } from '../storage/migrations';
+import { autoLockMinutesToMs, DEFAULT_PREFS } from '../storage/prefs';
 import type { VaultPlaintext } from '../storage/schema';
 import { readVault, writeVault } from '../storage/vault';
 import { MessagingError } from './protocol';
 
-export const DEFAULT_AUTO_LOCK_MS = 2 * 60 * 1000;
+// Derived from DEFAULT_PREFS so the SW default and the user-facing default
+// can never drift. If you change one, the other follows automatically.
+export const DEFAULT_AUTO_LOCK_MS = autoLockMinutesToMs(
+  DEFAULT_PREFS.autoLockMinutes,
+);
 
 export type CancelTimer = () => void;
 export type LockScheduler = (delayMs: number, fire: () => void) => CancelTimer;

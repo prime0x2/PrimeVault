@@ -1,5 +1,5 @@
 import { useId, useState } from 'react';
-import { Button, Input, Label } from '../../components/form';
+import { Alert, Button, Input, Label } from '../../components/form';
 import { popupClient } from '../../messaging/popup-client';
 import { MessagingError } from '../../messaging/protocol';
 import { downloadJson } from '../backup/download';
@@ -57,7 +57,7 @@ export function ExportEncryptedForm({
 
   return (
     <form onSubmit={onSubmit} className="flex flex-col gap-3" noValidate>
-      <p className="text-muted-foreground text-xs leading-relaxed">
+      <p className="text-text-dim text-xs leading-relaxed">
         Re-enter your master password. The downloaded file is encrypted — keep
         it somewhere safe, but it's only as strong as the password used to
         decrypt it.
@@ -77,12 +77,9 @@ export function ExportEncryptedForm({
       </div>
 
       {error && (
-        <p
-          role="alert"
-          className="rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-destructive text-xs"
-        >
+        <Alert role="alert" tone="danger">
           {error}
-        </p>
+        </Alert>
       )}
 
       <div className="flex justify-end gap-2 pt-1">

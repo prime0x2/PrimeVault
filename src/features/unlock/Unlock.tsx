@@ -1,7 +1,7 @@
 import { useId, useState } from 'react';
 import {
   BrandHeader,
-  DialMarkLarge,
+  BrandMarkLarge,
   PopupFooter,
   PopupShell,
   PrimaryButton,
@@ -9,9 +9,16 @@ import {
 } from '../../components/terminal';
 import { popupClient } from '../../messaging/popup-client';
 import { MessagingError, type VaultStatus } from '../../messaging/protocol';
+import type { AutoLockMinutes } from '../../storage/prefs';
+import { usePopupPrefs } from '../vault/usePopupPrefs';
 
 interface UnlockProps {
   onUnlocked: (status: VaultStatus) => void;
+}
+
+function autoLockLabel(minutes: AutoLockMinutes): string {
+  if (minutes === 0) return 'auto-lock off';
+  return `auto-lock ${minutes}m`;
 }
 
 export function Unlock({ onUnlocked }: UnlockProps): React.ReactElement {
@@ -19,6 +26,7 @@ export function Unlock({ onUnlocked }: UnlockProps): React.ReactElement {
   const [password, setPassword] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const prefs = usePopupPrefs();
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -49,7 +57,7 @@ export function Unlock({ onUnlocked }: UnlockProps): React.ReactElement {
       footer={
         <PopupFooter>
           <span>encrypted · this device only</span>
-          <span>auto-lock 15m</span>
+          <span>{autoLockLabel(prefs.autoLockMinutes)}</span>
         </PopupFooter>
       }
     >
@@ -59,14 +67,14 @@ export function Unlock({ onUnlocked }: UnlockProps): React.ReactElement {
         aria-label="Unlock your vault"
       >
         <div className="mb-[22px] flex justify-center">
-          <DialMarkLarge size={84} />
+          <BrandMarkLarge size={84} />
         </div>
 
         <h1 className="mb-1.5 text-center font-semibold text-[26px] leading-[1.1] tracking-[-0.025em]">
           Welcome back.
         </h1>
         <p className="mb-[26px] text-center text-[13px] text-text-dim">
-          Spin the dial — enter your master key.
+          Enter your master key.
         </p>
 
         <label htmlFor={passwordId} className="sr-only">

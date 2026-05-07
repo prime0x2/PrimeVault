@@ -28,13 +28,9 @@ export type ClipboardClearSeconds = (typeof CLIPBOARD_CLEAR_OPTIONS)[number];
 export const THEME_OPTIONS = ['system', 'light', 'dark'] as const;
 export type Theme = (typeof THEME_OPTIONS)[number];
 
-export const ACCENT_OPTIONS = ['slate', 'violet', 'green'] as const;
-export type Accent = (typeof ACCENT_OPTIONS)[number];
-
 export const prefsSchema = z.object({
   prefsVersion: z.literal(PREFS_VERSION),
   theme: z.enum(THEME_OPTIONS),
-  accent: z.enum(ACCENT_OPTIONS),
   autoLockMinutes: z.union(
     AUTO_LOCK_MINUTE_OPTIONS.map((n) => z.literal(n)) as [
       z.ZodLiteral<0>,
@@ -53,7 +49,6 @@ export const prefsSchema = z.object({
     ],
   ),
   defaultEntryKind: z.enum(ENTRY_KINDS),
-  shortcutHint: z.boolean(),
 });
 
 export type Prefs = z.infer<typeof prefsSchema>;
@@ -61,11 +56,9 @@ export type Prefs = z.infer<typeof prefsSchema>;
 export const DEFAULT_PREFS: Prefs = {
   prefsVersion: PREFS_VERSION,
   theme: 'system',
-  accent: 'slate',
   autoLockMinutes: 2,
   clipboardClearSeconds: 30,
   defaultEntryKind: 'secret' satisfies EntryKind,
-  shortcutHint: true,
 };
 
 /**

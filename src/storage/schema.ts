@@ -20,6 +20,19 @@ export const ENTRY_KINDS = [
 
 export type EntryKind = (typeof ENTRY_KINDS)[number];
 
+/**
+ * Display labels for each kind. Today they match the raw enum values; kept
+ * as a single map so future relabels (e.g. "api_key" → "API key") happen in
+ * one place rather than scattered across feature components.
+ */
+export const KIND_LABELS: Record<EntryKind, string> = {
+  api_key: 'api_key',
+  token: 'token',
+  password: 'password',
+  secret: 'secret',
+  other: 'other',
+};
+
 export const ENTRY_SCOPES = ['personal', 'work'] as const;
 
 export type EntryScope = (typeof ENTRY_SCOPES)[number];

@@ -19,10 +19,9 @@
  * clock) so tests can drive it without touching real Chrome.
  *
  * Note on minimum delays: chrome.alarms in production clamps anything
- * below 30 seconds up to ~30 seconds. The 15-second clipboardClearSeconds
- * option therefore behaves as ~30s in production. The popup uses
- * {@link effectiveClipboardClearSeconds} to display the actual delay so
- * the banner doesn't lie; the Settings page documents the floor.
+ * below 30 seconds up to ~30 seconds. The user-facing options
+ * (CLIPBOARD_CLEAR_OPTIONS in storage/prefs.ts) intentionally start at 30s
+ * so the displayed delay matches what the user actually experiences.
  */
 
 export interface AlarmsApi {

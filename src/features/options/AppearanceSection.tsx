@@ -31,9 +31,8 @@ export function AppearanceSection({
           ))}
         </div>
         <p className="font-mono text-[11px] text-text-muted leading-relaxed">
-          Direction B (Terminal) is dark-only for v0.1 — light and system both
-          render the same dark surface. A native light theme will land with
-          v0.2.
+          Dark renders Terminal (phosphor green, mono everywhere). Light renders
+          Calm (ember orange, sans only). System follows your OS.
         </p>
       </fieldset>
     </section>

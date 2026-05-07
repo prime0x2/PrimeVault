@@ -13,7 +13,7 @@
  */
 
 import { useEffect, useId, useRef, useState } from 'react';
-import { Button, Input, Label } from '../../components/form';
+import { Alert, Button, Input, Label } from '../../components/form';
 import { popupClient } from '../../messaging/popup-client';
 import { MessagingError } from '../../messaging/protocol';
 import { StrengthMeter } from '../passwords/StrengthMeter';
@@ -123,11 +123,7 @@ export function ChangePasswordForm({
 
   if (done) {
     // Brief success ack — parent typically collapses the form on next render.
-    return (
-      <p className="rounded-md border border-emerald-500/40 bg-emerald-500/10 px-3 py-2 text-emerald-700 text-xs dark:text-emerald-300">
-        Master password updated.
-      </p>
-    );
+    return <Alert tone="success">Master password updated.</Alert>;
   }
 
   return (
@@ -165,7 +161,7 @@ export function ChangePasswordForm({
           warning={scoreState.warning}
         />
         {sameAsCurrent && (
-          <p className="text-destructive text-xs">
+          <p className="text-danger text-xs">
             Pick a password different from your current one.
           </p>
         )}
@@ -183,17 +179,14 @@ export function ChangePasswordForm({
           onChange={(e) => setConfirm(e.target.value)}
         />
         {confirm.length > 0 && confirm !== next && (
-          <p className="text-destructive text-xs">Passwords don't match.</p>
+          <p className="text-danger text-xs">Passwords don't match.</p>
         )}
       </div>
 
       {error && (
-        <p
-          role="alert"
-          className="rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-destructive text-xs"
-        >
+        <Alert role="alert" tone="danger">
           {error}
-        </p>
+        </Alert>
       )}
 
       <div className="flex justify-end gap-2 pt-1">

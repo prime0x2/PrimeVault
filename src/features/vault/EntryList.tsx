@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import {
+  BrandMarkLarge,
   DangerButton,
-  DialMarkLarge,
   GhostButton,
 } from '../../components/terminal';
 import { popupClient } from '../../messaging/popup-client';
@@ -9,13 +9,24 @@ import type { ClipboardClearSeconds } from '../../storage/prefs';
 import type { Entry } from '../../storage/schema';
 import { EntryRow } from './EntryRow';
 
+/**
+ * What kind of narrowing produced the empty list.
+ *  - `search`: the user typed a query. Render quoted.
+ *  - `filter`: the user picked a chip (kind or expiry). Render unquoted —
+ *    "No password entries" reads like a sentence; "No `password` entries"
+ *    in quotes reads like the user typed it.
+ */
+export type NoMatchesContext =
+  | { kind: 'search'; query: string }
+  | { kind: 'filter'; label: string };
+
 interface EntryListProps {
   entries: Entry[];
   onMutated: () => void;
   /** True when an active search filter has reduced the list to zero rows. */
   filtered?: boolean;
-  /** Active query — shown in the no-matches state for context. */
-  query?: string;
+  /** Description of the active narrowing — drives the empty-state copy. */
+  noMatches?: NoMatchesContext;
   /** Triggered by the no-matches state's "+ new entry" button. */
   onAddEntry?: (() => void) | undefined;
   /** Bubble up edit requests so Vault can render the form full-screen. */
@@ -30,7 +41,7 @@ export function EntryList({
   entries,
   onMutated,
   filtered = false,
-  query = '',
+  noMatches,
   onAddEntry,
   onRequestEdit,
   onClearSearch,
@@ -58,7 +69,7 @@ export function EntryList({
   if (entries.length === 0) {
     return filtered ? (
       <NoMatchesState
-        query={query}
+        context={noMatches ?? { kind: 'search', query: '' }}
         onAddEntry={onAddEntry}
         onClearSearch={onClearSearch}
       />
@@ -86,11 +97,10 @@ export function EntryList({
   return (
     <div className="relative flex flex-1 flex-col overflow-hidden">
       <ul className="flex-1 overflow-y-auto px-2">
-        {sorted.map((entry, i) => (
+        {sorted.map((entry) => (
           <EntryRow
             key={entry.id}
             entry={entry}
-            selected={i === 0 && expandedId === null}
             expanded={expandedId === entry.id}
             onToggleExpand={() =>
               setExpandedId((id) => (id === entry.id ? null : entry.id))
@@ -124,7 +134,7 @@ function EmptyState({
 }): React.ReactElement {
   return (
     <div className="flex flex-1 flex-col items-center justify-center px-7 text-center">
-      <DialMarkLarge size={92} />
+      <BrandMarkLarge size={92} />
       <h2 className="mt-5 mb-1.5 font-semibold text-[18px] tracking-[-0.015em]">
         Vault is empty.
       </h2>
@@ -146,14 +156,21 @@ function EmptyState({
 }
 
 function NoMatchesState({
-  query,
+  context,
   onAddEntry,
   onClearSearch,
 }: {
-  query: string;
+  context: NoMatchesContext;
   onAddEntry?: (() => void) | undefined;
   onClearSearch?: (() => void) | undefined;
 }): React.ReactElement {
+  const isSearch = context.kind === 'search';
+  const eyebrow = isSearch
+    ? 'grep returned 0 matches'
+    : `filter "${context.label}" returned 0`;
+  const hint = isSearch
+    ? 'Try fewer characters, search by tag, or stash it as a new secret.'
+    : 'Clear the filter to see every entry, or stash a new one.';
   return (
     <div className="flex flex-1 flex-col items-center justify-center px-7 text-center">
       <div className="mb-4.5 flex h-[60px] w-[60px] items-center justify-center rounded-2xl border border-border-default bg-bg-elev">
@@ -173,19 +190,30 @@ function NoMatchesState({
           />
         </svg>
       </div>
-      <p className="mb-2.5 font-mono text-[11px] text-text-muted">
-        <span style={{ color: 'var(--accent)' }}>›</span> grep returned 0
-        matches
+      <p className="terminal-only mb-2.5 font-mono text-[11px] text-text-muted">
+        <span style={{ color: 'var(--accent)' }}>›</span> {eyebrow}
       </p>
       <h2 className="mb-1.5 font-semibold text-[18px] leading-[1.25] tracking-[-0.015em]">
-        No entry matches
-        <br />
-        <span className="font-mono" style={{ color: 'var(--accent)' }}>
-          "{query}"
-        </span>
+        {isSearch ? (
+          <>
+            No entry matches
+            <br />
+            <span className="font-mono" style={{ color: 'var(--accent)' }}>
+              "{context.query}"
+            </span>
+          </>
+        ) : (
+          <>
+            No{' '}
+            <span className="font-mono" style={{ color: 'var(--accent)' }}>
+              {context.label}
+            </span>{' '}
+            entries
+          </>
+        )}
       </h2>
       <p className="m-0 max-w-[240px] text-[12.5px] text-text-dim leading-[1.55]">
-        Try fewer characters, search by tag, or stash it as a new secret.
+        {hint}
       </p>
       <div className="mt-5 flex gap-2">
         {onClearSearch && (
@@ -283,7 +311,7 @@ function DeleteConfirmModal({
         </p>
 
         <div
-          className="mb-4 rounded-[8px] border bg-bg-sunken px-2.5 py-2 font-mono text-[11px] text-text-dim"
+          className="terminal-only mb-4 rounded-[8px] border bg-bg-sunken px-2.5 py-2 font-mono text-[11px] text-text-dim"
           style={{ borderColor: 'var(--border)' }}
         >
           <span style={{ color: 'var(--accent)' }}>›</span> rm {entryName}{' '}

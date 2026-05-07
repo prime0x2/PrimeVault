@@ -12,7 +12,7 @@
  */
 
 import { useState } from 'react';
-import { Button, Input, Label } from '../../components/form';
+import { Alert, Button, Input, Label } from '../../components/form';
 import { popupClient } from '../../messaging/popup-client';
 import { MessagingError } from '../../messaging/protocol';
 
@@ -54,17 +54,17 @@ export function ResetVaultForm({
   return (
     <form
       onSubmit={onSubmit}
-      className="flex flex-col gap-3 rounded-md border border-destructive/30 bg-destructive/5 p-3"
+      className="flex flex-col gap-3 rounded-md border border-danger-border bg-danger-soft p-3"
       noValidate
     >
-      <p className="text-destructive text-sm">
+      <p className="text-danger text-sm">
         This will permanently delete your encrypted vault and every entry it
         contains. This action cannot be undone. Your preferences will be kept.
       </p>
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="reset-confirm" className="text-sm">
-          Type <code className="rounded bg-muted px-1 font-mono">RESET</code> to
-          confirm
+          Type <code className="rounded bg-bg-elev px-1 font-mono">RESET</code>{' '}
+          to confirm
         </Label>
         <Input
           id="reset-confirm"
@@ -78,12 +78,9 @@ export function ResetVaultForm({
       </div>
 
       {error && (
-        <p
-          role="alert"
-          className="rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-destructive text-xs"
-        >
+        <Alert role="alert" tone="danger">
           {error}
-        </p>
+        </Alert>
       )}
 
       <div className="flex justify-end gap-2 pt-1">

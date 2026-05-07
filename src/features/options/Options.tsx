@@ -1,4 +1,4 @@
-import { DialMark } from '../../components/terminal';
+import { BrandMark } from '../../components/terminal';
 import { AppearanceSection } from './AppearanceSection';
 import { BackupSection } from './BackupSection';
 import { SecuritySection } from './SecuritySection';
@@ -11,7 +11,7 @@ export function Options(): React.ReactElement {
     <div className="mx-auto flex max-w-2xl flex-col gap-8 px-6 py-10 text-text">
       <header className="flex flex-col gap-3">
         <div className="flex items-center gap-3">
-          <DialMark size={28} className="text-text" />
+          <BrandMark size={28} className="text-text" />
           <span className="font-mono text-[11px] text-text-muted tracking-[0.18em]">
             PRIMEVAULT · SETTINGS
           </span>
@@ -20,8 +20,10 @@ export function Options(): React.ReactElement {
           Preferences
         </h1>
         <p className="font-mono text-[12px] text-text-dim leading-relaxed">
-          <span style={{ color: 'var(--accent)' }}>›</span> stored locally —
-          never leaves this device
+          <span className="terminal-only" style={{ color: 'var(--accent)' }}>
+            ›{' '}
+          </span>
+          stored locally — never leaves this device
         </p>
       </header>
 

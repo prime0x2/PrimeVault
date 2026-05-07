@@ -9,6 +9,7 @@ import {
   type Entry,
   type EntryKind,
   type EntryScope,
+  KIND_LABELS,
 } from '../../storage/schema';
 import { TagInput } from './TagInput';
 
@@ -18,14 +19,6 @@ interface EntryFormProps {
   onSaved: () => void;
   onCancel: () => void;
 }
-
-const KIND_LABELS: Record<EntryKind, string> = {
-  api_key: 'api_key',
-  token: 'token',
-  password: 'password',
-  secret: 'secret',
-  other: 'other',
-};
 
 export function EntryForm({
   entry,
@@ -51,9 +44,11 @@ export function EntryForm({
   const [expiresAt, setExpiresAt] = useState(entry?.expiresAt ?? '');
   // Tags and notes collapse by default to keep Save/Cancel above the fold.
   // In edit mode we auto-expand when the entry has either set, so the user
-  // can see what they're about to change.
-  const hasOptional = !!entry?.notes || (entry?.tags?.length ?? 0) > 0;
-  const [showMore, setShowMore] = useState(hasOptional);
+  // can see what they're about to change. Lazy-initialized so the entry
+  // checks only run on mount, not every render.
+  const [showMore, setShowMore] = useState(
+    () => !!entry?.notes || (entry?.tags?.length ?? 0) > 0,
+  );
 
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
