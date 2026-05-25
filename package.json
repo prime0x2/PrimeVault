@@ -34,7 +34,7 @@
     "postinstall": "wxt prepare && node -e \"require('node:fs').mkdirSync('.wxt/chrome-data',{recursive:true})\""
   },
   "dependencies": {
-    "@fontsource/geist-mono": "^5.2.7",
+    "@fontsource/geist-mono": "^5.2.8",
     "@fontsource/geist-sans": "^5.2.5",
     "@zxcvbn-ts/core": "^3.0.4",
     "@zxcvbn-ts/language-common": "^3.0.4",
