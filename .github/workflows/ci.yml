@@ -37,7 +37,7 @@ jobs:
       - name: Set up pnpm
         # Reads packageManager from package.json so this stays in sync
         # with the local pnpm version automatically.
-        uses: pnpm/action-setup@v6
+        uses: pnpm/action-setup@v6.0.9
 
       - name: Set up Node
         uses: actions/setup-node@v6
